@@ -279,7 +279,13 @@ export default {
                         for(let j = 0; j <currentTemdValue.responsibilityData.length;j++){
                             if(j < temD_4[nowIndex].responsibilityData.length){
                                 if(currentTemdValue.responsibilityData[j].subResponsibilityData == null){//没有子责任
-                                    currentTemdValue.responsibilityData[j].level = temD_4[nowIndex].responsibilityData[j].level;
+                                // currentTemdValue.responsibilityData[j].level = temD_4[nowIndex].responsibilityData[j].level;
+                                    temD_4[nowIndex].responsibilityData.forEach(function(currentSubValueData,indexSubData){
+                                        if(currentTemdValue.responsibilityData[j].responsibilityNameCode == currentSubValueData.responsibilityNameCode.substring(0,3)){
+                                            currentTemdValue.responsibilityData[j].level = currentSubValueData.level;
+                                            return;
+                                        }
+                                    })
                                 }else{
                                     currentTemdValue.responsibilityData[j].subResponsibilityData.forEach(function(currentSubValue,indexSub){
                                         // if(currentSubValue.subIfDefaultConfiguration == true){

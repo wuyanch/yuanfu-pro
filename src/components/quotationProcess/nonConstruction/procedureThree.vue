@@ -772,9 +772,9 @@ export default {
         }
         li{
             // cursor:pointer;
-            p{
-                margin-bottom: -8px;
-            }
+            // p{
+            //     // margin-bottom: -8px;
+            // }
             button{
                 min-width: 48px;
                 height: 38px;

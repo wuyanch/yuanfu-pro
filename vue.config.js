@@ -94,7 +94,7 @@ module.exports = {
       hotOnly: false, // See https://github.com/vuejs/vue-cli/blob/dev/docs/cli-service.md#configuring-proxy
       proxy:{
         '/': {    //将www.exaple.com印射为/apis
-            target: 'http://tkwx.cn1.utools.club',  //http://tkwx.cn1.utools.club http://tktk.cn1.utools.club http://tkwx.cn.utools.club http://tktk.cn1.utools.club http://gdbbc.pension.taikang.com/mybp/work      https://apptest.utools.club 
+            target: 'http://gdbbc.pension.taikang.com/mybp/work',  //http://tkwx.cn1.utools.club http://tktk.cn1.utools.club http://tkwx.cn.utools.club http://tktk.cn1.utools.club http://gdbbc.pension.taikang.com/mybp/work      https://apptest.utools.club 
             secure: false,  // 如果是https接口，需要配置这个参数
             changeOrigin: true,  //是否跨域
             pathRewrite: {
