@@ -6,7 +6,7 @@
             <p class="decorate">请确认项目信息</p>
             <p class="information-ind"><span><i class="xing">*</i>行业</span><el-button type="text" @click="centerDialogVisible = true"><span v-if="hasInde" class="placeHolder">请选择行业</span><span v-else >{{selectIndustry}}</span><i class="el-icon-arrow-down"></i> </el-button></p>
             <p class="information-num" ><span><i class="xing">*</i>单位人数</span><el-input v-model.number="totalNum" placeholder="请填写单位人数"></el-input></p>
-            <p class="information-remark"><span>备注</span>
+            <p class="information-remark"><span>我的备注</span>
                 <el-input
                 type="textarea"
                 resize="none"
@@ -167,6 +167,7 @@ export default {
     padding: 0 10px;
     margin-top: 10px;
     height: 40px;
+    line-height: 40px;
     .el-icon-arrow-down{
         color: #bfbfbf;
     }

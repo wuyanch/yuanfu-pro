@@ -48,10 +48,12 @@ module.exports = {
     }, 
     css: {
       loaderOptions: {
+        
           postcss: {
               plugins: [
-                  require('postcss-pxtorem')({//postcss-plugin-px2rem
+                  require('postcss-pxtorem')({//postcss-plugin-px2rem  postcss-px2rem postcss-pxtorem
                       rootValue: 37.5, //换算基数， 默认100
+                      // remUnit: 75,
                       propList  : ['*'],
                       // unitPrecision: 5, //允许REM单位增长到的十进制数字。
                       //propWhiteList: [],  //默认值是一个空数组，这意味着禁用白名单并启用所有属性。
@@ -61,12 +63,12 @@ module.exports = {
                       // ignoreIdentifier: false,  //（boolean/string）忽略单个属性的方法，启用ignoreidentifier后，replace将自动设置为true。
                       // replace: true, // （布尔值）替换包含REM的规则，而不是添加回退。
                       mediaQuery: true,  //（布尔值）允许在媒体查询中转换px。
-                      minPixelValue: 3 //设置要替换的最小像素值(3px会被转rem)。 默认 0
+                      minPixelValue: 4 //设置要替换的最小像素值(3px会被转rem)。 默认 0
                   })
               ]
           }
       }
-  },
+    },
     // CSS 相关选项
     // css: {
     //   // 将组件内部的css提取到一个单独的css文件（只用在生产环境）
@@ -94,7 +96,7 @@ module.exports = {
       hotOnly: false, // See https://github.com/vuejs/vue-cli/blob/dev/docs/cli-service.md#configuring-proxy
       proxy:{
         '/': {    //将www.exaple.com印射为/apis
-            target: 'http://gdbbc.pension.taikang.com/mybp/work',  //http://tkwx.cn1.utools.club http://tktk.cn1.utools.club http://tkwx.cn.utools.club http://tktk.cn1.utools.club http://gdbbc.pension.taikang.com/mybp/work      https://apptest.utools.club 
+            target: 'https://tiknagyuanfuqahdegzo.cn.utools.club',  //https://gfdioguafewsoruwe794.cn.utools.club  http://tktk.cn1.utools.club http://gdbbc.pension.taikang.com/mybp/work      https://apptest.utools.club 
             secure: false,  // 如果是https接口，需要配置这个参数
             changeOrigin: true,  //是否跨域
             pathRewrite: {

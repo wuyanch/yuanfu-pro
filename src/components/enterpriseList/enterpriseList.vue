@@ -519,7 +519,7 @@ $creatNewEnterprise:38px;
         .el-input__inner{
             display: inline-block;
             height: 36px;
-            vertical-align: text-top;
+            vertical-align: text-top !important;
             padding: 0;
             margin: 0;
             width: 100%;

@@ -193,6 +193,7 @@ export default {
                         this.selectContentFlag = true;
                         this.noDataTip = '暂时还没有报价哦~';
                         this.isNodata = true;
+                        this.totalAll = 0;
                     }
                 }else{
                     this.$alert('出错啦！获取不到报价','',{
@@ -232,6 +233,15 @@ export default {
         //关闭按钮出现，假装可以关闭
         dateFocus: function(){
             console.log('关闭按钮出现')
+            document.activeElement.blur()
+            this.$nextTick(() => {
+                let inputTime = document.querySelectorAll('.el-input__inner')
+                inputTime.forEach(item => {
+                item.addEventListener('focus', () => {
+                    document.activeElement.blur()
+                })
+                })
+            })
             this.dateClose = true;
         },
         //日期失去焦点的时候，获取时间

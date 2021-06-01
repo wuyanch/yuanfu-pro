@@ -42,8 +42,18 @@
                                v-model = "agencyFee" placeholder="整单、分险种写都行" maxlength="200" show-word-limit @focus="handleFocus" @blur="handleblur"></el-input></p>
                             </div>
                         </div>
-                        <div>
-
+                        <div class="insurance-period">
+                            <label for=""><span class="tip">*</span>保期：</label>
+                            <el-select v-model="insurancePeriod"  placeholder="请选择">
+                                <el-option
+                                    v-for="item in insurancePeriodList"
+                                    :key="item.id"
+                                    :label="item.value"
+                                    :value="item.periodId">
+                                </el-option>
+                            </el-select>
+                            <p class="insurance-period-day" v-if="insurancePeriod==3"><el-input type="number" placeholder="输入小于365的整数" @input="periodDay" max="365" v-model="insurancePeriodDay"></el-input> 天</p>
+                            
                         </div>
                     </div>
                 </div>
@@ -221,6 +231,16 @@ export default {
             loadingPic:null,//上传图片的时候的loading
             loading:false,
             foucesTimer:null,//ios键盘回落参数
+            insurancePeriod:'',//20210422保期
+            insurancePeriodDay:'',//20210422保期-天
+            insurancePeriodList:[
+                {periodId:1, value:'1年', id:0},
+                {periodId:2, value:'1月', id:1},
+                {periodId:3, value:'自定义', id:2}
+            ],
+            yfyear:null,//保期年
+            yfmonth:null,//保期月
+            yfday:null//保期日
         }
     },
     created(){
@@ -757,6 +777,15 @@ export default {
                 this.businessInformationName = current.businessInformationName;
                 this.textareaRemarks = current.textareaRemarks;
                 this.totalPremium = current.totalPremium;
+                //喜获保期
+                if(current.yfyear != null && current.yfyear != ''){
+                    this.insurancePeriod = 1;
+                }else if(current.yfyear == 0 && current.yfmonth != null && current.yfmonth != ''){
+                    this.insurancePeriod = 2;
+                }else {
+                    this.insurancePeriod = 3;
+                    this.insurancePeriodDay = current.yfday;
+                }
             }
             // 获取图片
             if(!!localStorage.getItem('quotationInformation_pic') && localStorage.getItem(' quotationInformation_pic')!=''){
@@ -765,6 +794,7 @@ export default {
                 this.fileList = pic;
                 this.fileListCopy = pic;
             }
+            
             console.log('保费');
         },
         //回到主页
@@ -776,6 +806,8 @@ export default {
         //存储数据的整理
         DataArrangement(){
             let flag = false;
+            let periodFlag = false;
+            let allflag = false;//作用是所有的都填写了
             let that = this;
             console.log('businessInformation');
             console.log(this.businessInformation);
@@ -797,22 +829,61 @@ export default {
                     }
                 }
             }
-            if(flag){
+            if(this.insurancePeriod != '' ){
+                if(this.insurancePeriod == 1){//选择1年
+                    this.yfyear = 1;
+                    this.yfmonth = 0;
+                    this.yfday = 0;
+                    periodFlag = true;
+                }else if(this.insurancePeriod == 2){
+                    this.yfyear = 0;
+                    this.yfmonth = 1;
+                    this.yfday = 0;
+                    periodFlag = true;
+                }else{
+                    this.yfyear = 0;
+                    this.yfmonth = 0;
+                    if(this.insurancePeriodDay != ''){
+                        this.yfday = this.insurancePeriodDay;
+                        periodFlag = true;
+                    }else{
+                        periodFlag = false;
+                    }
+                }
+            }else{
+                periodFlag = false;
+            }
+            if(flag && periodFlag){
                     this.pureData();
                     // this.$router.push({path:'procedurePreview'})
             }else{
                 this.$alert('请完成“业务信息”相关必填内容','',{
                     confirmButtonText: '确定',
-                    callback: action => {
-                        
-                    }
+                    callback: action => {}
                 })
             }
-            return flag;
+            allflag = (flag && periodFlag) ? true: false;
+            console.log(allflag);
+            return allflag;
         },
         //单纯数据处理
         pureData(){
                 let premiumFPT = [];//保费
+                if(this.insurancePeriod != '' ){
+                    if(this.insurancePeriod == 1){//选择1年
+                        this.yfyear = 1;
+                        this.yfmonth = 0;
+                        this.yfday = 0;
+                    }else if(this.insurancePeriod == 2){
+                        this.yfyear = 0;
+                        this.yfmonth = 1;
+                        this.yfday = 0;
+                    }else{
+                        this.yfyear = 0;
+                        this.yfmonth = 0;
+                        this.yfday = this.insurancePeriodDay;
+                    }
+                }
                 let prem = {//其他信息
                     agencyFee: this.agencyFee,
                     agency: this.agency,
@@ -821,6 +892,9 @@ export default {
                     totalPeople: this.totalPeople,
                     totalPremium: this.totalPremium,
                     textareaRemarks: this.textareaRemarks,
+                    yfyear: this.yfyear,
+                    yfmonth: this.yfmonth,
+                    yfday: this.yfday
                 }
                 let inform = {
                     premium:prem,
@@ -862,6 +936,16 @@ export default {
                 window.pageXOffset = 0;
                 document.documentElement.scrollTop = 0;
             }, 100);
+        },
+        //20210422控制最大值为365天保期
+        periodDay: function () {
+            if(this.insurancePeriodDay > 365){
+                this.insurancePeriodDay = 365
+            }else if(this.insurancePeriodDay < -1){
+                this.insurancePeriodDay = 0
+            }else{
+                this.insurancePeriodDay = Number(this.insurancePeriodDay);
+            }
         }
         
     }
@@ -914,9 +998,12 @@ export default {
         }
         label{
             margin-right: 5px;
-            // width: 21%;
-            width: 25%;
+            width: 21%;
+            // width: 25%;
             display: inline-block;
+            height: 35px;
+            line-height: 35px;
+            vertical-align: bottom;
         }
         .select{
             display: inline-block;
@@ -932,6 +1019,18 @@ export default {
                     padding: 3px 0;
                 }
             }
+        }
+    }
+    .insurance-period{
+        margin-top: 10px;
+        .insurance-period-day{
+            margin-top: 5px;
+            text-align: center;
+            .el-input{
+                width: 42%;
+                display: inline-block;
+            }
+           
         }
     }
 }

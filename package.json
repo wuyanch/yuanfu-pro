@@ -18,6 +18,7 @@
     "postcss": "^7.0.35",
     "postcss-plugins": "^1.13.1",
     "sa-sdk-javascript": "^1.16.4",
+    "v-distpicker": "^1.2.9",
     "vue": "^2.6.12",
     "vue-router": "^3.5.1"
   },
@@ -35,6 +36,7 @@
     "postcss-loader": "^4.0.4",
     "postcss-plugin-px2rem": "^0.8.1",
     "postcss-pxtorem": "^5.1.1",
+    "px2rem-loader": "^0.1.9",
     "qs": "^6.5.2",
     "sass": "^1.32.8",
     "sass-loader": "^10.1.1",

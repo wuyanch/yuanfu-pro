@@ -40,6 +40,7 @@
                         <p><span>业务渠道</span><span>：</span><span>{{aggregate[1].premium.businessInformationName}}</span></p>
                         <p v-if="aggregate[1].premium.agency!='' && aggregate[1].premium.agency!=null"><span>代理机构名称</span><span>：</span><span>{{aggregate[1].premium.agency}}</span></p>
                         <p v-if="aggregate[1].premium.agencyFee!=''&&aggregate[1].premium.agencyFee!=null"><span>代理费</span>：<span>{{aggregate[1].premium.agencyFee}}</span></p>
+                        <p><span>保期</span><span>：</span><span v-show="aggregate[1].premium.yfyear != 0">{{aggregate[1].premium.yfyear}} 年</span><span v-show="aggregate[1].premium.yfmonth != 0">{{aggregate[1].premium.yfmonth}} 月</span><span v-show="aggregate[1].premium.yfday != 0">{{aggregate[1].premium.yfday}} 天</span></p>
                         <p><span>拟投保总人数(人)</span><span>：</span><span>{{aggregate[1].premium.totalPeople}}</span></p>
                         <p><span>期望整单总保费(元)</span><span>：</span><span>{{aggregate[1].premium.totalPremium}}</span></p>
                     </div>
@@ -121,8 +122,10 @@
                                                         <p v-if="itemSub.level != null" class="kind-explain-1 desc desc-sub">
                                                             <span v-for="(itemSubL,index5) in itemSub.level[0].resp_conditionList" :key="index5">
                                                                <span v-if="itemSubL.resp_condition == '床位费日限额(元)'">
-                                                                  <span v-if="itemSubL.levelvalue > 0 && itemSub.level[0].levelcode=='L'">{{itemSubL.resp_condition}}(不按照社保标准)：{{itemSubL.levelvalue}}；</span> 
-                                                                  <span v-else>{{itemSubL.resp_condition}}：按照社保标准；</span> 
+                                                                  <span v-if="itemSubL.levelvalue == -1 ">{{itemSubL.resp_condition}}：按照社保标准；</span> 
+                                                                  <span v-else>{{itemSubL.resp_condition}}(不按照社保标准)：{{itemSubL.levelvalue}}；</span> 
+                                                                  <!-- <span v-if="itemSubL.levelvalue > 0 && itemSub.level[0].levelcode=='L'">{{itemSubL.resp_condition}}(不按照社保标准)：{{itemSubL.levelvalue}}；</span> 
+                                                                  <span v-else>{{itemSubL.resp_condition}}：按照社保标准；</span>  -->
                                                                 </span> 
                                                                 <span v-else>{{itemSubL.resp_condition}}：{{itemSubL.levelvalue}}；</span> 
                                                             </span>
