@@ -204,6 +204,7 @@ $fontSize-fourteen: 14px;
 .nomal-divider{
     margin: 0;
 }
+
 .pre-companyList{
     background: #fff;
     border-radius: 5px;
@@ -211,7 +212,15 @@ $fontSize-fourteen: 14px;
         margin-top: 15px;
     }
     .success-title{
-        background: #FFE180;
+        // background: #FFE180;
+        background: #5895fa url('../../assets/effectIns/probg.png') no-repeat 100% 100%;
+        background-size: 100% 100%;
+        .company-title{
+            color: white;
+        }
+        .company-creat-time{
+            color:#bfdbee;
+        }
      }
     .company-top{
         border-top-left-radius: 5px;
@@ -233,7 +242,6 @@ $fontSize-fourteen: 14px;
                 flex-grow:1;
             }
         }
-        
         .el-button{
             width: 60px;
             padding: 0 10px 0 0;
@@ -384,7 +392,6 @@ $fontSize-fourteen: 14px;
     transform: rotateZ(40deg);
     border: 1px dotted #2cccd4;
     font-size: 4px;
-    // @include font-dpr(11px);
 }
 .policy-detail-button{
     text-align: center;

@@ -2,7 +2,7 @@
 <!-- 确定投保信息 -->
     <div class="determine-information-page" vkshop-event-scope="定投保信息">
         <enterprise-name :enterpriseCurCall="enterpriseCurName"></enterprise-name>
-        <div v-loading="initLoading" :class="[initLoading?'initLoading':'']" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading">
+        <div v-loading="initLoading" :class="[initLoading?'initLoading':'','el-hyq-loading']" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading">
             <div class="determine-information-content" v-if="!initLoading" >
                 <!-- 投保单位 -->
                 <div class="information-content-part information-content-unit">
@@ -125,7 +125,7 @@ export default {
             dialogFormVisible:false,//是否展示切换
             waitProserialno:null,//需要切换的询价
             enterpriseCurName: localStorage.getItem('YF_mainstream_project'),//项目
-            proserialno:'5301YF16045566850460013',//询价号
+            proserialno:'',//询价号
             subprojectid:'',//子项目编码
             subprojectName:null,//子项目名字
             insurstarttime:'',//保险开始时间
@@ -825,18 +825,34 @@ $fontSize-fourteen: 14px;
     .initLoading{
         margin-top: 100px;
     }
-    .loadingFont {
-        .el-loading-text{
-            font-size: 10px;
+
+    .el-hyq-loading {
+        .el-loading-mask{
+            .el-loading-text{
+                font-size: 12px;
+            }
+            .el-loading-spinner {
+                position: fixed;
+                font-size: 21px;
+            }
         }
-        .el-loading-spinner {
-            margin-top: -15px;
+    
+    }
+    .el-hyq-loading {
+        .footer-button{
+            .loadingFont {
+                .el-loading-text{
+                    font-size: 10px;
+                }
+                .el-loading-spinner {
+                    margin-top: -15px;
+                    position: absolute;
+                    font-size: 12px;
+                }
+            }
         }
     }
-    .el-loading-spinner{
-        position: fixed;
-        font-size: 22px;
-    }
+
 }
 
 

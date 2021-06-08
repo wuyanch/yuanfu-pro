@@ -2,7 +2,7 @@
 <!-- 完善企业信息 -->
     <div vkshop-event-scope="新建投保单-完善信息" class="cor-inform">
         <enterprise-name :enterpriseCurCall="enterpriseCurName"></enterprise-name>
-        <div v-loading="initLoading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading">
+        <div v-loading="initLoading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" class="el-hyq-loading">
             <div class="unit-form" v-show="!initLoading">
                 <el-form :model="unitForm" ref="unitForm" :rules="rules">
                     <!-- 1、企业名字 -->
@@ -1273,14 +1273,33 @@ export default {
 .el-message-box__input{
     padding-top: 5px  !important;
 }
-.loadingFont {
-    .el-loading-text{
-        font-size: 10px;
+.el-hyq-loading {
+    .el-loading-mask{
+        .el-loading-text{
+            font-size: 12px;
+        }
+        .el-loading-spinner {
+            position: fixed;
+            font-size: 21px;
+        }
     }
-    .el-loading-spinner {
-        margin-top: -15px;
+   
+}
+.el-hyq-loading {
+    .footer-button{
+        .loadingFont {
+            .el-loading-text{
+                font-size: 10px;
+            }
+            .el-loading-spinner {
+                margin-top: -15px;
+                position: absolute;
+                font-size: 12px;
+            }
+        }
     }
 }
+
 
 
 </style>
