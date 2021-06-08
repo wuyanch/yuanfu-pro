@@ -98,7 +98,9 @@
                                     <el-radio :label="'5类及以上'" border class="small-radio">5类及以上</el-radio>
                                 </el-radio-group>
                         </el-form-item>
-                        <span class="tip">职业工种说明：{{tipPlaceholder[index][domain.occupationCategory]}}</span>
+                        <span class="tip">职业工种说明：{{tipPlaceholder[index][domain.occupationCategory]}}
+                            <el-button class="select-cate" @click="cateVisible"><i class="el-icon-search">类别</i></el-button>
+                        </span>
                         
 
                         <el-form-item 
@@ -132,6 +134,50 @@
             <button @click="goHome" vkshop-event-name="返回主页" vkshop-event-type="click">返回主页</button><button @click="goPrev" vkshop-event-name="上一步" vkshop-event-type="click">上一步</button><button @click="tempStorage" vkshop-event-name="暂存" vkshop-event-type="click" v-loading="loading" :disabled="loading" element-loading-spinner="el-icon-loading"  element-loading-text="拼命暂存中" :class="{ loadingFont : loading}">暂存</button><button @click="submitForm('dynamicValidateForm')" vkshop-event-name="下一步" vkshop-event-type="click">下一步</button>
         </div>
         
+        <el-dialog
+        title="职业分类查询"
+        :visible.sync="catedialogVisible"
+        width="100%"
+        class="cate-dialog">
+        <div>
+            <el-input placeholder="输入工种关键字搜索职业类别" v-model="cateKeyword" class="input-with-select">
+                <el-button slot="append" icon="el-icon-search" @click="searchCate"></el-button>
+            </el-input>
+            <div v-if="tableData.length != 0">
+                <el-table
+                    :data="tableData"
+                    stripe
+                    style="width: 100%">
+                    <el-table-column
+                    prop="speciesname"
+                    label="工种名称"
+                    width="90">
+                    </el-table-column>
+                    <el-table-column
+                    prop="industrytype"
+                    label="类别"
+                    width="90">
+                    </el-table-column>
+                    <el-table-column
+                    prop="industry"
+                     width="90"
+                    label="行业">
+                    </el-table-column>
+                    <el-table-column
+                    prop="professiontype"
+                    label="职业类别">
+                    </el-table-column>
+                </el-table>
+            </div>
+            <div v-else class="cate-nodata">
+                <img :src="[cateImg?cateImgA:cateImgB]" alt="" srcset="">
+                <p>{{cateMsg}}</p>
+            </div>
+        </div>
+        <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="catedialogVisible = false">关 闭</el-button>
+        </span>
+        </el-dialog>
 
     </div>
 
@@ -169,7 +215,14 @@ export default {
                 '5类及以上':'使用车床、铣床、剪床等大型机械将五金原料按图纸样品加工成各种零件/建筑工地工人/涉及2米及以上工作等。'
             }],
             loading:false,
-            foucesTimer:null//ios键盘回落参数
+            foucesTimer:null,//ios键盘回落参数
+            catedialogVisible:false,//职业分类的弹窗
+            tableData: [],
+            cateKeyword:null,//搜索关键字的词
+            cateImg:false,
+            cateImgA:require('@a/img/nodata.png'),
+            cateImgB:require('@a/img/no-result.png'),
+            cateMsg:'等待输入关键字搜索'
         }
     },
     created(){
@@ -406,6 +459,40 @@ export default {
                 window.pageXOffset = 0;
                 document.documentElement.scrollTop = 0;
             }, 100);
+        },
+        cateVisible: function(){
+            this.cateKeyword = null;
+            this.tableData = [];
+            this.cateImg=false;
+            this.cateMsg='等待输入关键字搜索';
+            this.catedialogVisible = true;
+        },
+        //搜索职业类别
+        searchCate: function(){
+            //speciesname
+            console.log("开始搜索职业类别")
+            if(this.cateKeyword == ''){
+                this.$alert('关键字不能为空')
+                return
+            }else{
+                this.$axios.post('/index/getProfessTypeBySpeciesname',{
+                    speciesname:this.cateKeyword,
+                    rand:new Date().getTime()
+                }).then(response => {
+                    console.log("搜索职业类别")
+                    console.log(response)
+                    if(response.data.code == 200){
+                        if(response.data.data.length != 0){//搜索出来
+                            this.tableData = response.data.data
+                        }else{//没有搜索出来
+                            this.tableData = [];
+                            this.cateImg = true;
+                            this.cateMsg = '搜索结果为空 ，请换个关键字'
+                        }
+                    }
+                })
+            }
+            
         }
     }
 }
@@ -584,6 +671,22 @@ export default {
         background: #fff;
     }
 }
+.select-cate{
+    padding: 0;
+    color: #5cb2ff;
+    border: none;
+    font-size: 11px;
+    border-bottom: 1px solid #5cb2ff;
+    border-radius: 0;
+}
+.cate-nodata{
+    text-align: center;
+    font-size:13px ;
+    img{
+        width: 150px;
+        margin-top: 40px;
+    }
+}
 </style>
 
 <style lang="scss">
@@ -639,6 +742,33 @@ export default {
             line-height: 35px;
             // line-height: 40px;
         }
+    }
+    .cate-dialog{
+        .el-dialog{
+            position: fixed;
+            bottom: 0;
+            top: 0;
+            margin-bottom: 0;
+        }
+        .input-with-select .el-input-group__prepend {
+            background-color: #fff;
+        }
+        .el-dialog__body{
+            padding: 10px;
+        }
+        .el-dialog__footer{
+            font-size: 0;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+        }
+        .el-table__body-wrapper{
+            height: 48vh;
+            overflow: scroll;
+        }
+    }
+    .el-input-group>.el-input__inner{
+        vertical-align: middle  !important;
     }
 }
 .procedure-content{

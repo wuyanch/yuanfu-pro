@@ -46,9 +46,10 @@
                                                                         active-color="#6db9fe"
                                                                         inactive-color="#d4d4d4"
                                                                         v-model="contentSon.isnorm"
-                                                                        @change="isnormQ(contentSon.isnorm,index,index1,index2,indexCSon)">
+                                                                        @change="isnormQ(contentSon.isnorm,index,index1,index2,indexCSon)"
+                                                                        :disabled="editSuccessList[index][index1][index2] ? false : 'disabled'">
                                                                     </el-switch>
-                                                                    <label class="standard-span" v-if="contentSon.isnorm == false">日限额(元）：<el-input type="number" v-model.number.trim="contentSon.levelvalue"  @focus="handleFocus" @blur="handleblur"  autocomplete="off" ></el-input></label>
+                                                                    <label class="standard-span" v-if="contentSon.isnorm == false">日限额(元）：<el-input type="number" v-model.number.trim="contentSon.levelvalue"  @focus="handleFocus" @blur="handleblur"  autocomplete="off" :readonly="editSuccessList[index][index1][index2] ? false : 'readonly'"></el-input></label>
                                                                 </div>
                                                                
                                                                 <div v-else-if="content.levelcode == 'Z'" class="self-edit">
@@ -230,7 +231,7 @@ export default {
                          current.levelvalue = 0;
                     }
                 }
-                if(current.resp_condition.indexOf('元') != -1 || current.resp_condition.indexOf('天') != -1){//含有元
+                 if((current.resp_condition.indexOf('元') != -1 || current.resp_condition.indexOf('天') != -1) && current.resp_condition.indexOf('床位费') == -1){//含有元
                     if(current.levelvalue < 0){
                          current.levelvalue = 0;
                     }

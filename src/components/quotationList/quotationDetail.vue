@@ -280,7 +280,17 @@
                                                         </div>
                                                         <div  v-for="(item42,index42) in item3.respList" :key="index42">
                                                             <div v-if="item42.insureamount > 0 && item42.subIfDefaultConfiguration == true">
-                                                                <p class="kind-title-1 kind-explain-1"><span>{{item42.respshort}}：</span><span><span class="mony"><span class="mony-before">{{item42.insureamount | numFilterBefore}}</span>.<span class="mony-after">{{item42.insureamount | numFilterAfter}}</span></span> {{item42.amountunit}}</span><span class="hb-money" v-if="item42.hbamount != null"><i class="hb-money-f">￥</i><span class="mony"><span class="mony-before">{{item42.hbamount | numFilterBefore}}</span>.<span class="mony-after">{{item42.hbamount | numFilterAfter}}</span></span></span></p>
+                                                                <p class="kind-title-1 kind-explain-1"><span>{{item42.respshort}}：</span>
+                                                                    <span v-if="item42.hbinsureamount != null"><i class="after-hbchange"><span class="mony"><span class="mony-before">{{item42.hbinsureamount | numFilterBefore}}</span>.<span class="mony-after">{{item42.hbinsureamount | numFilterAfter}}</span></span> {{item42.amountunit}}</i>
+                                                                        <el-tooltip placement="top" class="item" effect="dark" v-if="item42.hbinsureamount != item42.insureamount">
+                                                                            <div slot="content">申请设置条件为：{{item42.insureamount}}</div>
+                                                                            <el-button class="hbchange"><i class="el-icon-warning-outline"></i>该数值核保有改动</el-button>
+                                                                        </el-tooltip>
+                                                                    </span>
+                                                                    <span v-else><span class="mony"><span class="mony-before">{{item42.insureamount | numFilterBefore}}</span>.<span class="mony-after">{{item42.insureamount | numFilterAfter}}</span></span> {{item42.amountunit}}</span>
+                                                                    <span class="hb-money" v-if="item42.hbamount != null"><i class="hb-money-f">￥</i><span class="mony"><span class="mony-before">{{item42.hbamount | numFilterBefore}}</span>.<span class="mony-after">{{item42.hbamount | numFilterAfter}}</span></span></span>
+                                                                    <!-- <span><span class="mony"><span class="mony-before">{{item42.insureamount | numFilterBefore}}</span>.<span class="mony-after">{{item42.insureamount | numFilterAfter}}</span></span> {{item42.amountunit}}</span>-->
+                                                                </p>
                                                                 <div class="kind-explain-1 kind-explain-2 desc" v-if="item42.confList != null">
                                                                     <p  v-for="(item42_sub,index42_sub) in item42.confList" :key="index42_sub">
                                                                     <span>{{item42_sub.levelname}}:</span>
@@ -513,8 +523,8 @@ export default {
                         })
                     })
                 })
-                planCalcFee = current.insurenum*planHbFee;
-                that.hbAllPlanFee += planCalcFee;
+                planCalcFee = (current.insurenum*planHbFee).toFixed(2);
+                that.hbAllPlanFee += Number(planCalcFee);
                 that.planHbFeeA.push({
                     num:current.insurenum,
                     allFee:planHbFee,

@@ -48,13 +48,14 @@
                                         </el-input-number>
                                     </div>
                                     <!-- 如果有子责任 -->
-                                    <div class="content-clause-mony" v-else>
+                                    <div class="content-clause-mony" v-else v-show="allresponsibilityItem.responsibilityNameCode == 110">
                                             <span v-if="allresponsibilityItem.responsibilityNameCode == 110">门诊、住院是否共用额度</span>
                                             <el-switch
                                             v-if="allresponsibilityItem.responsibilityNameCode == 110"
                                             v-model="allresponsibilityItem.ifDefaultConfiguration"
                                             active-color="#6db9fe"
-                                            inactive-color="#d4d4d4">
+                                            inactive-color="#d4d4d4"
+                                            >
                                             </el-switch>
                                     </div>
                                     <!-- 如果是110险种 -->
@@ -130,22 +131,7 @@
                                                     </el-input-number>
                                                 </div>
                                             </div>
-                                            <!-- <div v-else-if="subresponsibilityItem.subResponsibilityNameCode=='573003'">
-                                                <div class="content-clause-mony" v-if="subresponsibilityItem.subIfDefaultConfiguration == true">
-                                                    <span>保额({{subresponsibilityItem.insuredUnit}})</span>
-                                                    <el-input-number 
-                                                    type='number'
-                                                    :min=0.1
-                                                    :max="(allresponsibilityItem.subResponsibilityData[0].trueConfigurationStep)*0.5"
-                                                    size="small" 
-                                                    @focus="handleFocus" 
-                                                    @blur="handleblur"
-                                                    @change="checkNo(index,index1,index2,index3)" 
-                                                    v-model.trim="subresponsibilityItem.trueConfigurationStep" 
-                                                    :step="subresponsibilityItem.subDefaultConfigurationStep==null||subresponsibilityItem.subDefaultConfigurationStep==0?1:subresponsibilityItem.subDefaultConfigurationStep">
-                                                    </el-input-number>
-                                                </div>
-                                            </div> -->
+                                         
                                             <div v-else-if="subresponsibilityItem.subResponsibilityNameCode=='580002'">
                                                 <div class="content-clause-mony" v-if="subresponsibilityItem.subIfDefaultConfiguration == true">
                                                     <span>保额({{subresponsibilityItem.insuredUnit}})</span>
@@ -194,24 +180,7 @@
                                                     </el-input-number>
                                                 </div>
                                             </div>
-                                            <!-- <div v-else-if="subresponsibilityItem.subResponsibilityNameCode=='580005'">
-                                                <div class="content-clause-mony" v-if="subresponsibilityItem.subIfDefaultConfiguration == true">
-                                                    <span>保额({{subresponsibilityItem.insuredUnit}})</span>
-                                                    <el-input-number 
-                                                    type='number'
-                                                    :min=0.1
-                                                    :max="(allresponsibilityItem.subResponsibilityData[index3-1].trueConfigurationStep)*0.5"
-                                                    size="small" 
-                                                    @focus="handleFocus" 
-                                                    @blur="handleblur"
-                                                    @change="checkNo(index,index1,index2,index3)" 
-                                                    v-model.trim="subresponsibilityItem.trueConfigurationStep" 
-                                                    :step="subresponsibilityItem.subDefaultConfigurationStep==null||subresponsibilityItem.subDefaultConfigurationStep==0?1:subresponsibilityItem.subDefaultConfigurationStep">
-                                                    </el-input-number>
-                                                </div>
-                                            </div> -->
-
-
+                                            
                                         </div>
                                     </div>
 
@@ -1273,6 +1242,7 @@ export default {
     }
 }
 .content-clause{
+    font-size: 12px;
     i{
         img{
             width: 12px;

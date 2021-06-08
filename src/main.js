@@ -10,7 +10,8 @@ import ElementUI, { Message, Alert } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
 //引入淘宝的自适应js
-import 'lib-flexible/flexible.js'
+// import 'lib-flexible/flexible.js'--20210427无法适配安卓手机，展示放下
+import 'lib-flexible/oldflexible.js'
 // import 'amfe-flexible/index.js'
 
 // import Vuex from 'vuex'

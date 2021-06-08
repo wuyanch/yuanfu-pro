@@ -24,12 +24,19 @@
         <div>
           <p class="service-title">询报价</p>
           <ul class="service-ul">
-              <li :class="{ newLaunch: item.ifNew }" v-for="(item,index) in quotedPriceList" :key="index" :data-state="item.state" @click="modularGo(item.address)" :vkshop-event-name="item.name" vkshop-event-type="click"><img :src="item.src" alt=""><span>{{item.name}}</span></li>
+              <li  :class="{ newLaunch: item.ifNew }" v-for="(item,index) in quotedPriceList" :key="index" :data-state="item.state" @click="modularGo(item.address)" :vkshop-event-name="item.name" vkshop-event-type="click"><img :src="item.src" alt=""><span>{{item.name}}</span></li>
           </ul>
         </div>
         <!-- 承保保全 -->
         <div>
           <p class="service-title">承保保全</p>
+          <ul class="service-ul">
+              <li :class="{ newLaunch: item.ifNew }" v-for="(item,index) in coverWorkList" :key="index" :data-state="item.state" @click="modularGo(item.address)" :vkshop-event-name="item.name" vkshop-event-type="click"><img :src="item.src" alt=""><span>{{item.name}}</span></li>
+          </ul>
+        </div>
+        <!-- 承保服务 -->
+        <div>
+          <p class="service-title">承保服务</p>
           <ul class="service-ul">
               <li :class="{ uncultivated: item.ifDevlop }" v-for="(item,index) in vocationalWorkList" :key="index" :data-state="item.state" @click="modularGo(item.address)" :vkshop-event-name="item.name" vkshop-event-type="click"><img :src="item.src" alt=""><span>{{item.name}}</span></li>
           </ul>
@@ -61,25 +68,25 @@ export default {
      isAttention: null,//是否关注
      proname:'--',//项目名称
      variousPremiums:[
-                {id:'0',name:'累计XX保费(元)',premiums:'0.00'},
-                {id:'1',name:'累计XX保费(元)',premiums:'0.00'},
-                {id:'2',name:'累计XX保费(元)',premiums:'0.00'},
-                {id:'3',name:'年金XX(元)',premiums:'0.00'},
-                {id:'4',name:'累计XX保费(元)',premiums:'0.00'},
-                {id:'5',name:'累计XX保费(元)',premiums:'0.00'}
+                {id:'0',name:'累计XX保费(元)',premiums:'0.00'},{id:'1',name:'累计XX保费(元)',premiums:'0.00'},
+                {id:'2',name:'累计XX保费(元)',premiums:'0.00'},{id:'3',name:'年金XX(元)',premiums:'0.00'},
+                {id:'4',name:'累计XX保费(元)',premiums:'0.00'},{id:'5',name:'累计XX保费(元)',premiums:'0.00'}
             ],//各种保费展示
      quotedPriceList:[
-                {id:'0',name:'快速报价',src:require('../assets/img/kuaisubaojia.png'),state:1, address:'enterpriseConfirm',ifNew:true, ifDevlop:false},
-                {id:'1',name:'我的询价',src:require('../assets/img/wodexunjia.png'),state:1, address:'quotationList',ifNew:true, ifDevlop:false}
+                {id:'0',name:'快速报价',src:require('../assets/img/kuaisubaojia.png'),state:1, address:'enterpriseConfirm',ifNew:false, ifDevlop:false},
+                {id:'1',name:'报价查询',src:require('../assets/img/wodexunjia.png'),state:1, address:'quotationList',ifNew:false, ifDevlop:false}
             ],//询报价
-     vocationalWorkList:[
-                {id:'0',name:'投保资料下载',src:require('../assets/img/xiazai.png'),state:0,address:'develop',ifNew:false, ifDevlop:true},
-                {id:'1',name:'保全查询',src:require('../assets/img/baoquanchaxun.png'),state:0,address:'develop',ifNew:false ,ifDevlop:true}
+     coverWorkList:[
+                {id:'0',name:'我要投保',src:require('../assets/img/toubao.png'),state:0,address:'effectIndex',ifNew:true, ifDevlop:false}
             ],//业务xx
+     vocationalWorkList:[
+                {id:'0',name:'保全申请',src:require('../assets/img/xiazai.png'),state:0,address:'develop',ifNew:false, ifDevlop:true},
+                {id:'1',name:'保全查询',src:require('../assets/img/baoquanchaxun.png'),state:0,address:'develop',ifNew:false ,ifDevlop:true}
+            ],//承保保全
      otherList:[
                 {id:'0',name:'获取年报',src:require('../assets/img/nianbao.png'),state:0,address:'develop',ifNew:false, ifDevlop:true},
                 {id:'1',name:'增值服务',src:require('../assets/img/zengzhifuwu.png'),state:0,address:'develop',ifNew:false, ifDevlop:true}
-            ]//xx
+            ]//增值服务
           
     }
   },
@@ -261,6 +268,7 @@ export default {
     border-radius: 10px;
     border: none;
     font-size: 10px;
+    // @include font-dpr(10px);
     padding: 5px 15px 5px 6px;
     background: rgba(255,255,255,.9);
     border-top-right-radius: 0;
@@ -269,6 +277,7 @@ export default {
   }
   .establishment{
     font-size: 15px;
+    // @include font-dpr(14px);
     color: white;
     position: relative;
     top: 50%;
@@ -402,17 +411,20 @@ export default {
       span:first-child{
         display: block;
         font-size: 15px;
+        // @include font-dpr(14px);
         font-weight: 700;
       }
       span:last-child{
         display: inline-block;
         font-size: 12px;
+        // @include font-dpr(12px);
       }
     }
   }
   .service{
     .service-title{
       font-size: 12px;
+      // @include font-dpr(12px);
       color: #787878;
       padding: 10px 0;
       margin-top: 10px;
@@ -427,6 +439,7 @@ export default {
         width: 33.3%;
         height: 95px;
         font-size: 12px;
+        // @include font-dpr(12px);
         box-sizing: border-box;
         text-align: center;
         padding-top: 23px;
@@ -458,7 +471,8 @@ export default {
         transform: rotate(45deg);
         top: 8px;
         right: -18px;
-        font-size: 10px;
+        font-size: 11px;
+        // @include font-dpr(10px);
       }
       li.uncultivated{
         color: #bababa;
@@ -473,7 +487,8 @@ export default {
         transform: rotate(45deg);
         top: 8px;
         right: -18px;
-        font-size: 10px;
+        font-size: 11px;
+        // @include font-dpr(10px);
       }
     }
   }
@@ -483,6 +498,7 @@ export default {
     margin-top: 10px;
     button{
       font-size: 12px;
+      // @include font-dpr(12px);
       color:#3d75ff;
       background: inherit;
       border: none;
@@ -490,4 +506,11 @@ export default {
     }
   }
 }
+</style>
+
+<style lang="scss">
+.el-select--medium,.el-input__inner{
+  vertical-align: bottom !important;
+}
+
 </style>

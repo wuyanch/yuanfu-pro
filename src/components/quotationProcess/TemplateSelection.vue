@@ -6,7 +6,7 @@
             <!-- 非建工险模板 -->
             <div class="content-kind" v-for="(itemT,indexT) in allTemplate" :key="indexT">
                 <p class="kind"><span @click="explainNonConstruction(indexT)">{{itemT.type}}<i class="el-icon-warning-outline"></i></span></p>
-                <span class="explanatoryText" v-if="itemT.typecode == 'A'"><i>*</i>非建工险模板险种可增删</span>
+                <span class="explanatoryText" v-if="itemT.typecode == 'A'"><i>*</i>员福类模板险种可增删</span>
                 <div class="kind-template">
                     <ul>
                         <li v-for="(item,index) in itemT.insuranceTemplate" :key="index" @click="choiceTemplate(item.id,itemT.typecode)">
@@ -231,7 +231,7 @@ export default {
         explainNonConstruction: function(event){
             this.explainConstructionAB.length = 0;
             if(event == "0"){
-               this.dialogTitle = '非建工险类'
+               this.dialogTitle = '员福类'
                this.explainConstructionAB.push(
                     {list:'①不含建工险险种（192、193)；'},{list:'②每次询价至少包含一个主险；'},
                     {list:'③其他险种可按运营规则自由组合。'})

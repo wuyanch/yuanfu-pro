@@ -201,9 +201,72 @@ export default new Router({
       component: () => import('@/components/devePage/error.vue'),
       meta:{
         // 页面标题title
-        title: '错误页面'
+        title: '404页面'
+      }
+    },{
+      path:'/effectIndex',
+      name:'effectIndex',
+      component: () => import('@/components/effectInsurance/effectIndex.vue'),
+      meta:{
+        // 页面标题title
+        title: '我要投保'
+      }
+    },{
+      path:'/applicationStepOne',
+      name:'applicationStepOne',
+      component: () => import('@/components/effectInsurance/applicationStepOne.vue'),
+      meta:{
+        // 页面标题title
+        title: '选询价'
+      }
+    },{
+      path:'/applicationStepTwo',
+      name:'applicationStepTwo',
+      component: () => import('@/components/effectInsurance/applicationStepTwo.vue'),
+      meta:{
+        // 页面标题title
+        title: '读流程'
+      }
+    },{
+      path:'/corporateInformation',
+      name:'corporateInformation',
+      component: () => import('@/components/effectInsurance/corporateInformation.vue'),
+      meta:{
+        // 页面标题title
+        title: '完善信息'
+      }
+    },{
+      path:'/corporateFinish',
+      name:'corporateFinish',
+      component: () => import('@/components/effectInsurance/corporateFinish.vue'),
+      meta:{
+        // 页面标题title
+        title: ''
+      }
+    },{
+      path:'/determineInformation',
+      name:'determineInformation',
+      component: () => import('@/components/effectInsurance/determineInformation.vue'),
+      meta:{
+        // 页面标题title
+        title: '定投保信息'
+      }
+    },{
+      path:'/determineFinish',
+      name:'determineFinish',
+      component: () => import('@/components/effectInsurance/determineFinish.vue'),
+      meta:{
+        // 页面标题title
+        title: ''
+      }
+    },{
+      path:'/determineDetail',
+      name:'determineDetail',
+      component: () => import('@/components/effectInsurance/determineDetail.vue'),
+      meta:{
+        // 页面标题title
+        title: '投保详情'
       }
     }
-
   ]
 })
