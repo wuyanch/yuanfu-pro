@@ -347,7 +347,7 @@ export default {
         border: 1px solid #fff;
         background: #fff;
         color: #427cff;
-        padding: 8px 10px;
+        padding: 5px 10px;
         border-radius: 5px;
         &:nth-child(2){
           right: 130px;
