@@ -973,7 +973,7 @@ export default {
 .premium-part{
     .part-title{
         font-size: 12px;
-        background: #ededed;
+        background: #f5f5f5;
         padding: 10px 15px;
         color: #292828;
         position: relative;
@@ -1274,7 +1274,7 @@ export default {
             color: #f8b95b;
         }
         .el-step__icon{
-            background: #ededed;
+            background: #f5f5f5;
         }
         .el-step.is-horizontal .el-step__line{
             height: 1px;

@@ -495,7 +495,7 @@ $fontSize-fourteen: 14px;
     width: 100%;
     height: 40px;
     padding-top: 5px;
-    background-color: #ededed;
+    background-color: #f5f5f5;
     font-size: 0;
     button{
         min-width: 35%;

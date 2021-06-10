@@ -378,7 +378,7 @@ $creatNewEnterprise:38px;
     }
     ul{
         list-style-type: none;
-        background: #ededed;
+        background: #f5f5f5;
     }
     li{
         margin-top: 8px;
@@ -464,7 +464,7 @@ $creatNewEnterprise:38px;
     bottom: 0;
     width: 100%;
     box-sizing: border-box;
-    background: #ededed;
+    background: #f5f5f5;
     button{
         // width: 100%;
         height: $creatNewEnterprise;
@@ -472,7 +472,7 @@ $creatNewEnterprise:38px;
         position: relative;
         overflow: hidden;
         font-size: 13px;
-        background: #ededed;
+        background: inherit;
         &:first-child{
             width: 18%;
             border: 1px solid #60b3ff;

@@ -740,7 +740,7 @@ export default {
                 width: 15px;
                 height: 15px;
                 border-radius: 50px;
-                background: #ededed;
+                background: #f5f5f5;
                 top: 35px;
                 left: -7px;
             }
@@ -750,7 +750,7 @@ export default {
                 width: 15px;
                 height: 15px;
                 border-radius: 50px;
-                background: #ededed;
+                background: #f5f5f5;
                 top: 35px;
                 right: -7px;
             }
@@ -912,7 +912,7 @@ span.el-pagination__total{
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    background: rgb(237, 237, 237);
+    background: #f5f5f5;
     width: 100%;
     font-size: 0;
     padding: 10px;

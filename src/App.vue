@@ -46,8 +46,8 @@ html,body,ul,li,p,div{
   padding: 0;
 }
 html{
- /* background: #e7e7e7; */
-  background: #ededed;
+  background: #f7f5f5;
+  /* background: #ededed; */
 }
 #app {
   font-family: "PingFang SC",sans-serif,"Helvetica Neue",Helvetica,"Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial;

@@ -184,6 +184,7 @@ export default {
                 background: inherit;
                 border: 1px solid #60b3ff;
                 color: #60b3ff;
+                margin-right: 10px;
             }
             &:last-child{
                 background: #60b3ff;

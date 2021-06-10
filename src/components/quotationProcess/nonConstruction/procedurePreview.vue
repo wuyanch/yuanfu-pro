@@ -792,7 +792,7 @@ export default {
             color: #f8b95b;
         }
         .el-step__icon{
-            background: #ededed;
+            background: #f5f5f5;
         }
         .el-step.is-horizontal .el-step__line{
             height: 1px;

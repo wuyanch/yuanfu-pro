@@ -1,59 +1,54 @@
 <template>
   <div class="oto-index" vkshop-event-scope="我的员福首页">
-    <!-- 头部 -->
-    <div class="header">
-      <button class="creat-change" @click="createEnterprise" >
-        <span v-if="haveEnterprise" :vkshop-event-param="'project=' + proname"  vkshop-event-name="切换项目" vkshop-event-type="click"><i class="el-icon-sort" ></i> 切换项目</span>
-        <span v-else vkshop-event-name="创建项目" vkshop-event-type="click"><i class="el-icon-plus" ></i> 创建项目</span>
-      </button>
-      <p class="establishment">{{proname}}</p>
-      <span class="left-q qq"><i></i><i></i></span>
-      <span class="right-q qq"><i></i><i></i></span>
-    </div>
-    <!-- 主体内容 -->
-    <div class="main">
-      <!-- 保费展示 2020-11-10注释（不上线）-->
-      <!-- <div class="Premium">
-        <ul class="Premium-ul">
-          <li v-for="(item,index) in variousPremiums" :key="index"><span>{{item.premiums}}</span><span>{{item.name}}</span></li>
-        </ul>
-      </div> -->
-      <!-- 服务展示 -->
-      <div class="service">
-        <!-- 询报价 -->
-        <div>
-          <p class="service-title">询报价</p>
-          <ul class="service-ul">
-              <li  :class="{ newLaunch: item.ifNew }" v-for="(item,index) in quotedPriceList" :key="index" :data-state="item.state" @click="modularGo(item.address)" :vkshop-event-name="item.name" vkshop-event-type="click"><img :src="item.src" alt=""><span>{{item.name}}</span></li>
-          </ul>
-        </div>
-        <!-- 承保保全 -->
-        <div>
-          <p class="service-title">承保保全</p>
-          <ul class="service-ul">
-              <li :class="{ newLaunch: item.ifNew }" v-for="(item,index) in coverWorkList" :key="index" :data-state="item.state" @click="modularGo(item.address)" :vkshop-event-name="item.name" vkshop-event-type="click"><img :src="item.src" alt=""><span>{{item.name}}</span></li>
-          </ul>
-        </div>
-        <!-- 承保服务 -->
-        <div>
-          <p class="service-title">承保服务</p>
-          <ul class="service-ul">
-              <li :class="{ uncultivated: item.ifDevlop }" v-for="(item,index) in vocationalWorkList" :key="index" :data-state="item.state" @click="modularGo(item.address)" :vkshop-event-name="item.name" vkshop-event-type="click"><img :src="item.src" alt=""><span>{{item.name}}</span></li>
-          </ul>
-        </div>
-        <!-- 增值服务 -->
-        <div>
-          <p class="service-title">增值服务</p>
-          <ul class="service-ul">
-              <li :class="{ uncultivated: item.ifDevlop }" v-for="(item,index) in otherList" :key="index" :data-state="item.state" @click="modularGo(item.address)" :vkshop-event-name="item.name" vkshop-event-type="click"><img :src="item.src" alt=""><span>{{item.name}}</span></li>
-          </ul>
-        </div>
-      </div>
-      <!-- 是否关注 -->
-      <div class="is-follow" v-if="haveEnterprise && isAttention != null">
-        <button class="is-or-follow" @click="addFollow" ><span v-if="isAttention == 0">添加到关注</span><span v-else>已关注</span></button>
+    <div class="index-top">
+      <div class="index-top-content">
+        <p><span>我的B端项目</span><span>{{projectNumber}}<i>个</i></span></p>
       </div>
     </div>
+    <div class="index-bottom">
+      <p class="bottom-tagging">当前项目</p>
+      <!-- 当前项目内容 -->
+      <div class="bottom-content">
+        <div class="content-top">
+          <p class="content-top-proname">{{proname}} <button v-if="!haveEnterprise && proname != '--'" @click="createEnterprise"><i class="el-icon-plus"></i>创建项目</button></p>
+          <button v-if="haveEnterprise" :class="[isAttention == '0'?'el-icon-plus':'el-icon-check']" @click="addFollow">{{isAttention != '0'?'已关注':'关注'}}</button>
+          <button @click="createEnterprise" v-if="haveEnterprise" class="el-icon-refresh" :vkshop-event-param="'project=' + proname"  vkshop-event-name="切换项目" vkshop-event-type="click">换一个项目</button>
+        </div>
+
+        <div class="content-bottom">
+          <!-- 询报价 -->
+          <div class="per-content">
+            <p class="service-title">询报价</p>
+            <ul class="service-ul">
+                <li  :class="{ newLaunch: item.ifNew }" v-for="(item,index) in quotedPriceList" :key="index" :data-state="item.state" @click="modularGo(item.address)" :vkshop-event-name="item.name" vkshop-event-type="click"><img :src="item.src" alt=""><span>{{item.name}}</span></li>
+            </ul>
+          </div>
+          <!-- 承保保全 -->
+          <div class="per-content">
+            <p class="service-title">承保保全</p>
+            <ul class="service-ul">
+                <li :class="{ newLaunch: item.ifNew }" v-for="(item,index) in coverWorkList" :key="index" :data-state="item.state" @click="modularGo(item.address)" :vkshop-event-name="item.name" vkshop-event-type="click"><img :src="item.src" alt=""><span>{{item.name}}</span></li>
+            </ul>
+          </div>
+          <!-- 承保服务 -->
+          <div class="per-content">
+            <p class="service-title">承保服务</p>
+            <ul class="service-ul">
+                <li :class="{ uncultivated: item.ifDevlop }" v-for="(item,index) in vocationalWorkList" :key="index" :data-state="item.state" @click="modularGo(item.address)" :vkshop-event-name="item.name" vkshop-event-type="click"><img :src="item.src" alt=""><span>{{item.name}}</span></li>
+            </ul>
+          </div>
+          <!-- 增值服务 -->
+          <div class="per-content">
+            <p class="service-title">增值服务</p>
+            <ul class="service-ul">
+                <li :class="{ uncultivated: item.ifDevlop }" v-for="(item,index) in otherList" :key="index" :data-state="item.state" @click="modularGo(item.address)" :vkshop-event-name="item.name" vkshop-event-type="click"><img :src="item.src" alt=""><span>{{item.name}}</span></li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
   </div>
   
 </template>
@@ -67,6 +62,7 @@ export default {
      haveEnterprise: false,//是否含有项目
      isAttention: null,//是否关注
      proname:'--',//项目名称
+     projectNumber: 0,//此人拥有的项目数量
      variousPremiums:[
                 {id:'0',name:'累计XX保费(元)',premiums:'0.00'},{id:'1',name:'累计XX保费(元)',premiums:'0.00'},
                 {id:'2',name:'累计XX保费(元)',premiums:'0.00'},{id:'3',name:'年金XX(元)',premiums:'0.00'},
@@ -92,6 +88,7 @@ export default {
   },
   created(){
     this.checkIfProject();
+    this.lookhowMuch();
   },
   mounted(){
     this.clearUnderline();
@@ -163,6 +160,18 @@ export default {
       //       }
       //     }
       // })
+    },
+    //看有多少项目
+    lookhowMuch(){
+      this.$axios.get('/index/getProjectList',{
+          params:{
+              page:1,
+              size:10,
+              rand:new Date().getTime()
+          }
+      }).then((response) => {
+        this.projectNumber = response.data.data.items.length
+      })
     },
     //获取最近点击的项目（伪最近）
     getNewClickProdction: function(){
@@ -255,254 +264,199 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-.header{
-  text-align: center;
-  height: 73px;
-  padding: 0 15px;
-  background: linear-gradient(180deg,#3d75ff,#94adec);
+.index-top{
+  height: 80px;
   position: relative;
-  .creat-change{
+  overflow: hidden;
+  &::before{
+    content: '';
     position: absolute;
-    right: 0;
-    top: 5px;
-    border-radius: 10px;
-    border: none;
-    font-size: 10px;
-    // @include font-dpr(10px);
-    padding: 5px 15px 5px 6px;
-    background: rgba(255,255,255,.9);
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    padding-right: 7px;
-  }
-  .establishment{
-    font-size: 15px;
-    // @include font-dpr(14px);
-    color: white;
-    position: relative;
-    top: 50%;
+    left: -10%;
+    top: 15%;
     transform: translateY(-50%);
+    height: 110px;
+    width: 120%;
+    background: #427cff;
+    border-radius: 50%;
   }
-  span.qq{
-    position: absolute;
-    bottom: -21px;
-    display: inline-block;
-    height: 31px;
-    width: 6px;
-    // background: #6ba3fe;
-    // border-radius: 30px;
-    // box-shadow:rgb(255, 255, 255) 0px 0px 4px inset;
-  }   
-  .left-q{
-    left: 20px;
-    i:first-child{
-      width: 12px;
-      height: 12px;
-      background: #fff;
-      border-radius: 12px;
-      position: absolute;
-      top: -6px;
-      left: -3px;
-      &::before{
-        content: '';
-        position: absolute;
-        bottom: -25px;
-        left: 3px;
-        display: inline-block;
-        height: 31px;
-        width: 6px;
-        background: #6ba3fe;
-        border-radius: 30px;
-        box-shadow:rgb(255, 255, 255) 0px 0px 4px inset;
+  .index-top-content{
+    position: relative;
+    background: #fff;
+    margin: 15px 10px;
+    font-size: 16px;
+    color: #02153e;
+    padding: 18px 15px;
+    border-radius: 10px;
+    span{
+      &:nth-child(2){
+        float: right;
+        font-weight: 600;
+        i{
+          font-style: normal;
+          font-size: 12px;
+          padding-left: 4px;
+          font-weight: 400;
+        }
       }
     }
-    i:last-child{
-      width: 12px;
-      height: 12px;
-      background: #e7e7e7;
-      border-radius: 12px;
-      position: absolute;
-      bottom: -6px;
-      left: -3px;
-      &::before{
-        content: '';
-        position: absolute;
-        bottom: 6px;
-        left: 3px;
-        display: inline-block;
-        height: 31px;
-        width: 6px;
-        background: #6ba3fe;
-        border-radius: 30px;
-        box-shadow:rgb(255, 255, 255) 0px 0px 4px inset;
-      }
-    }
-  }
-  .right-q{
-     right: 20px;
-     i:first-child{
-      width: 12px;
-      height: 12px;
-      background: #fff;
-      border-radius: 12px;
-      position: absolute;
-      top: -6px;
-      left: -3px;
-      &::before{
-        content: '';
-        position: absolute;
-        bottom: -25px;
-        left: 3px;
-        display: inline-block;
-        height: 31px;
-        width: 6px;
-        background: #6ba3fe;
-        border-radius: 30px;
-        box-shadow:rgb(255, 255, 255) 0px 0px 4px inset;
-      }
-    }
-    i:last-child{
-      width: 12px;
-      height: 12px;
-      background: #e7e7e7;
-      border-radius: 12px;
-      position: absolute;
-      bottom: -6px;
-      left: -3px;
-      &::before{
-        content: '';
-        position: absolute;
-        bottom: 6px;
-        left: 3px;
-        display: inline-block;
-        height: 31px;
-        width: 6px;
-        background: #6ba3fe;
-        border-radius: 30px;
-        box-shadow:rgb(255, 255, 255) 0px 0px 4px inset;
-      }
-    }
-  }
-  .el-icon-sort{
-    transform: rotate(90deg);
   }
 }
-.main{
-  background: #fff;
-  margin-top: 12px;
-  margin-bottom: 12px;
-  padding: 15px;
-  padding-bottom: 20px;
-  border-radius: 5px;
-  .Premium-ul{
-    background: #3d75ff;
-    color: white;
-    margin-top: 5px;
-    border-radius: 5px;
-    list-style-type: none;
-    li{
-      // width: 107px;
-      width: 33.3%;
-      display: inline-block;
-      text-align: center;
-      line-height: 15px;
-      padding: 15px 5px;
-      box-sizing: border-box;
-      span:first-child{
-        display: block;
-        font-size: 15px;
-        // @include font-dpr(14px);
-        font-weight: 700;
-      }
-      span:last-child{
-        display: inline-block;
-        font-size: 12px;
-        // @include font-dpr(12px);
-      }
+.index-bottom{
+   font-size: 0;
+  .bottom-tagging{
+    font-size: 12px;
+    font-weight: 700;
+    margin-left: 15px;
+    position: relative;
+    display: inline-block;
+    &::before{
+      content: '';
+      position: absolute;
+      bottom: 0;
+      height: 4px;
+      width: 100%;
+      background: #f7cc73;
+      border-top-right-radius: 5px;
+      border-bottom-left-radius: 5px;
+      z-index: -1;
     }
   }
-  .service{
-    .service-title{
-      font-size: 12px;
-      // @include font-dpr(12px);
-      color: #787878;
-      padding: 10px 0;
-      margin-top: 10px;
-    }
-    .service-ul{
-      list-style-type: none;
-      border-top: 1px solid #e7e7e7;
-      border-bottom: 1px solid #e7e7e7;
-      font-size: 0;
-      li{
-        display: inline-block;
-        width: 33.3%;
-        height: 95px;
-        font-size: 12px;
-        // @include font-dpr(12px);
-        box-sizing: border-box;
+  .bottom-content{
+    margin: 2px 10px 10px 10px;
+    .content-top{
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      font-size: 18px;
+      color: white;
+      text-align: center;
+      background: #427cff;
+      position: relative;
+      padding: 25px 10px 20px 10px;
+      .content-top-proname{
         text-align: center;
-        padding-top: 23px;
-        border-right: 1px solid #e7e7e7;
-        border-bottom: 1px solid #e7e7e7;
-        position: relative;
-        overflow: hidden;
-        &:nth-child(3n){
-          border-right: none;
+        button{
+          position: initial;
+          margin: 0 auto;
+          display: block;
+        }
+      }
+      button{
+        font-size: 14px;
+        position: absolute;
+        top: -15px;
+        border: 1px solid #fff;
+        background: #fff;
+        color: #427cff;
+        padding: 8px 10px;
+        border-radius: 5px;
+        &:nth-child(2){
+          right: 130px;
         }
         &:last-child{
-          border-bottom: none;
+          right: 10px;
         }
-        img{
-          display: block;
-          margin: 0 auto;
-          // width: 30px;
-          height: 30px;
-          margin-bottom: 3px;
-        }
-      }
-      li.newLaunch::before{
-        content: '新上线';
-        width: 70px;
-        line-height: 20px;
-        color: white;
-        position: absolute;
-        background: #f83e47;
-        transform: rotate(45deg);
-        top: 8px;
-        right: -18px;
-        font-size: 11px;
-        // @include font-dpr(10px);
-      }
-      li.uncultivated{
-        color: #bababa;
-      }
-      li.uncultivated::before{
-        content: '未上线';
-        width: 70px;
-        line-height: 20px;
-        color: white;
-        position: absolute;
-        background: #bababa;
-        transform: rotate(45deg);
-        top: 8px;
-        right: -18px;
-        font-size: 11px;
-        // @include font-dpr(10px);
       }
     }
-  }
-  .is-follow{
-    font-size: 0;
-    text-align: center;
-    margin-top: 10px;
-    button{
+    .content-bottom{
       font-size: 12px;
-      // @include font-dpr(12px);
-      color:#3d75ff;
-      background: inherit;
-      border: none;
-      padding: 10px 0;
+      position: relative;
+      margin: 0 auto;
+      padding: 10px;
+      background: rgba(224,236,255,.6);
+      overflow: hidden;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+      &::before{
+          content: '';
+          position: absolute;
+          top: 0; right: 0; bottom: 0; left: 0;
+          margin: -30px;
+          z-index: 0;
+          -webkit-filter: blur(60px);
+          filter: blur(60px);
+      }
+      .per-content:not(:first-child){
+        margin-top: 8px;
+      }
+      .service-title{
+        font-weight: 700;
+      }
+      ul{
+        li{
+          background: #427cff;
+          margin: 10px;
+          height: 70px;
+          width: 68px;
+          border-radius: 8px;
+          display: inline-block;
+          text-align: center;
+          overflow: hidden;
+          position: relative;
+          &::before{
+            content: '';
+            position: absolute;
+            left: -35%;
+            width: 170%;
+            height: 90px;
+            transform: translateY(-50%);
+            border-radius: 50%;
+            background: #fff;
+            z-index: 0;
+          }
+          img{
+            position: relative;
+            width: 30px;
+            margin-top: 8px;
+            z-index: 9;
+          }
+          span{
+            position: relative;
+            bottom: -8px;
+            font-size: 12px;
+            color: white;
+            display: block;
+          }
+          &:last-child{
+            margin-right: 0;
+          }
+          &:first-child{
+            margin-left: 0;
+          }
+        }
+        li.newLaunch::after{
+          content: '新';
+          width: 45px;
+          line-height: 20px;
+          color: white;
+          position: absolute;
+          background: #f83e47;
+          transform: rotate(45deg);
+          top: 0px;
+          right: -15px;
+          font-size: 11px;
+          // @include font-dpr(10px);
+        }
+        li.uncultivated{
+          background: #c9c9c9;
+          span{
+            color: #999;
+          }
+        }
+        li.uncultivated::after{
+          content: '未上线';
+          width: 70px;
+          line-height: 20px;
+          color: white;
+          position: absolute;
+          background: #bababa;
+          transform: rotate(45deg);
+          top: 8px;
+          right: -18px;
+          font-size: 11px;
+          z-index: 9;
+          // @include font-dpr(10px);
+        }
+      }
     }
   }
 }

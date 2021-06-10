@@ -14,9 +14,7 @@
                             <!-- 头部 -->
                             <div class="part-head">
                                 <span>核保意见</span>
-                                <img v-if="currentStatus == 1" :src="shenhe02" alt="" srcset="" class="gaiz">
-                                <img v-else-if="currentStatus == 2" :src="shenhe01" alt="" srcset="" class="gaiz">
-                                <img v-else-if="currentStatus == 3 || 4" :src="shenhe03" alt="" srcset="" class="gaiz">
+                                <img  :src="currentStatus == 1?shenhe02:(currentStatus == 2?shenhe01:shenhe03)" alt="" srcset="" class="gaiz">
                             </div>
                             <!-- 内容 -->
                             <div class="part-content part-unit">
@@ -65,8 +63,7 @@
                            
                                 <div class="part-head">
                                     <span>项目信息</span>
-                                    <el-button  @click="changeBlock(0)"><span v-if="dynamicValidateFormOpen[0].open">收起</span><span v-else>展开</span></el-button>
-                                
+                                    <el-button  @click="changeBlock(0)">{{dynamicValidateFormOpen[0].open?'收起':'展开'}}</el-button>
                                 </div>
                                 <div v-if="dynamicValidateFormOpen[0].open">
                                     <el-divider class ='headC'></el-divider>
@@ -97,6 +94,7 @@
                                         <p><span>业务渠道</span><span>：</span><span>{{BusinessInformation.saleschannel}}</span></p>
                                         <p v-if="BusinessInformation.agencyname != null && BusinessInformation.agencyname != ''"><span>代理机构名称</span><span>：</span><span>{{BusinessInformation.agencyname}}</span></p>
                                         <p v-if="BusinessInformation.agencyfee != null && BusinessInformation.agencyfee != ''"><span>代理费</span>：<span>{{BusinessInformation.agencyfee}}</span></p>
+                                        <p v-if="BusinessInformation.yfyear != undefined"><span>保期</span><span>：</span><span v-if="BusinessInformation.yfyear != 0">1年</span><span v-else-if="BusinessInformation.yfmonth != 0">1个月</span><span v-else-if="BusinessInformation.yfday != 0">{{BusinessInformation.yfday}}日</span></p>
                                         <p><span>拟投保总人数(人)</span><span>：</span><span>{{BusinessInformation.sum}}</span></p>
                                     </div>
                                     <div class="part-content part-service" v-else><p>没有获取到业务信息</p></div>
@@ -131,7 +129,7 @@
                                 
                                 <div class="part-head">
                                     <span>计划{{index1+1}}({{item1.planname}})</span>
-                                    <el-button  @click="changeBlock(index1+1)"><span v-if="dynamicValidateFormOpen[index1+1].open">收起</span><span v-else>展开</span></el-button>
+                                    <el-button   @click="changeBlock(index1+1)">{{dynamicValidateFormOpen[index1+1].open?'收起':'展开'}}</el-button>
                                 </div>
                                 <el-divider class ='headC'></el-divider>
                                 <div class="part-content plan-pre" v-if="dynamicValidateFormOpen[index1+1].open"> 
