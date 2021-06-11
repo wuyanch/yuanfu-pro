@@ -26,7 +26,7 @@
                                     </div>
                                     <div v-if="InquiryResult[0].speagree != '' && InquiryResult[0].speagree != null">
                                         <p class="part-pre-title">特别约定</p>
-                                        <p>{{InquiryResult[0].speagree}}</p>
+                                        <el-input type="textarea" v-model=InquiryResult[0].speagree  readonly="readonly" autosize resize='none' ></el-input>
                                     </div>
                                     <div v-if="InquiryResult[0].information != '' && InquiryResult[0].information != null">
                                         <p class="part-pre-title">核保资料</p>
@@ -1071,6 +1071,11 @@ export default {
     }
     .el-icon-circle-close:before{
         color: #fca50c;
+    }
+    .el-textarea__inner{
+        border: none;
+        padding-left: 0;
+        padding-right: 0;
     }
 }
 </style>

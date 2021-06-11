@@ -79,7 +79,11 @@
         </div>
         <!-- 底部按钮 -->
          <div class="footer-button">
-            <el-button @click="waiverModification">返回</el-button><el-button :class="[status == 3 ? 'go-send':'no-send']" @click="sendMessage(status)">再次发送</el-button>
+            <el-button @click="waiverModification">返回</el-button><el-button 
+            :class="[status == 3 ? 'go-send':'no-send']" 
+            @click="sendMessage(status)" 
+            vkshop-event-name="发送资料包_再次发送" 
+            vkshop-event-type="click" >再次发送</el-button>
         </div>
     </div>
 </template>

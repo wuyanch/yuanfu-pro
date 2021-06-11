@@ -105,7 +105,8 @@
             <div slot="footer" class="dialog-footer">
                 <p class="policy-num">共{{policys.length}}个有效报价</p>
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="comfirmChangeCheck">确 定</el-button>
+                <el-button type="primary" @click="comfirmChangeCheck"
+                 vkshop-event-name="资料包换询价_更换有效报价" vkshop-event-type="click">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -227,22 +228,29 @@ export default {
         },
         //确定切换询价
         comfirmChangeCheck: function(){
-            this.$axios.post('/index/updateInquiry',{
-                        subprojectid: this.subprojectid,
-                        ordProserialno: this.proserialno,
-                        newProserialno: this.waitProserialno,
-                        random: new Date().getTime()
-                }).then(response=>{
-                   console.log(response);
-                   if(response.data.code == 200){//切换成功
-                        this.proserialno = response.data.data.proserialno;
-                        this.waitProserialno = null;
-                        this.initInformation();
-                        this.dialogFormVisible = false;
-                   }
-                }).catch(error =>{
-                   
-                })
+            if(this.waitProserialno != null){
+                this.$axios.post('/index/updateInquiry',{
+                            subprojectid: this.subprojectid,
+                            ordProserialno: this.proserialno,
+                            newProserialno: this.waitProserialno,
+                            random: new Date().getTime()
+                    }).then(response=>{
+                    console.log(response);
+                    if(response.data.code == 200){//切换成功
+                            this.proserialno = response.data.data.proserialno;
+                            this.waitProserialno = null;
+                            this.initInformation();
+                            this.dialogFormVisible = false;
+                    }
+                    }).catch(error =>{
+                    
+                    })
+            }else{
+                this.$message({
+                    message: '请选择一个替换的有效报价哦~',
+                    type: 'warning'
+                });
+            }
         },
         //取消定投保信息
         waiverModification: function () {
@@ -600,8 +608,29 @@ $fontSize-fourteen: 14px;
     }
     .total-premium{
         padding: 10px 15px;
-        border-top: 1px solid #ededed;
+        border-top: 1px dotted #ededed;
         text-align: right;
+        position: relative;
+        &::before{
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            right: -7px;
+            top: -7px;
+            background: #f7f5f5;
+        }
+         &::after{
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            left: -7px;
+            top: -7px;
+            background: #f7f5f5;
+        }
     }
     .fixed-two{
         font-size: 10px;

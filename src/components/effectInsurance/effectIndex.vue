@@ -28,7 +28,7 @@
                                 <p class="company-information" @click="toPerfect(value.id,value.status)">企业信息 <el-button><i class="el-icon-arrow-right"></i></el-button></p>
                                 <el-divider class="dotter-divider"></el-divider>
                                 <div>
-                                    <p class="company-information-policy">投保单<span>（共 {{value.riskPolicies.length}} 个）</span> <el-button @click="creatPolicy(value.subproname,value.id)"><i class="el-icon-plus"></i>新建</el-button> </p>
+                                    <p class="company-information-policy">投保单<span>（共 {{value.riskPolicies.length}} 个）</span> <el-button @click="creatPolicy(value.subproname,value.id)"  vkshop-event-name="我要投保_新建投保单" vkshop-event-type="click"><i class="el-icon-plus"></i>新建</el-button> </p>
                                     <div v-if="value.riskPolicies.length != 0">
                                         <div class="policy-detail-div" v-for="(item,itemIndex) in value.riskPolicies" :key="itemIndex" >
                                             <div class="policy-detail" v-show="(itemIndex >= 2 && policyBlockORNone[index]) || itemIndex < 2" @click="lookDetail(item.policynumber,item.status)">
@@ -54,7 +54,7 @@
             </div>
             <!-- 下方固定按钮 -->
             <div class="effect-footer-button">
-                <el-button @click="waiverModification">返回项目主页</el-button><el-button icon="el-icon-plus" @click="creatUnit">新建投保单位</el-button>
+                <el-button @click="waiverModification">返回项目主页</el-button><el-button icon="el-icon-plus" @click="creatUnit" vkshop-event-name="我要投保_新建投保单位" vkshop-event-type="click" >新建投保单位</el-button>
             </div>
         </div>
         

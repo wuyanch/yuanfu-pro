@@ -53,7 +53,7 @@
                             prop="registerAddress"
                             label="注册详细地址"
                         >
-                            <el-input type="textarea"  v-model="unitForm.registerAddress" placeholder="如：珠江东路6号周大福金融中心37楼"></el-input>
+                            <el-input type="textarea" autosize  v-model="unitForm.registerAddress" placeholder="如：珠江东路6号周大福金融中心37楼"></el-input>
                         </el-form-item>
 
                         <el-form-item
@@ -242,7 +242,7 @@
                 @click="waiverModification(status)">
                 放弃修改</el-button>
                 <el-button @click="submitForm('unitForm')"
-                vkshop-event-name="修改企业信息" 
+                vkshop-event-name="企业信息_修改企业信息" 
                 vkshop-event-type="click" 
                 v-loading="submitloading" 
                 :disabled="submitloading"  
@@ -254,7 +254,7 @@
             <div class="footer-button" v-else>
                 <el-button @click="waiverModification(status)">取消</el-button><el-button 
                 @click="tempSaveForm"
-                vkshop-event-name="暂存" 
+                vkshop-event-name="企业信息_暂存" 
                 vkshop-event-type="click" 
                 v-loading="storageloading" 
                 :disabled="storageloading"  
@@ -262,7 +262,7 @@
                 element-loading-text="拼命暂存中" 
                 :class="{ loadingFont : storageloading}">暂存</el-button><el-button type="primary" 
                 @click="submitForm('unitForm')"
-                vkshop-event-name="提交" 
+                vkshop-event-name="企业信息_提交" 
                 vkshop-event-type="click" 
                 v-loading="submitloading" 
                 :disabled="submitloading"  
@@ -1044,6 +1044,7 @@ export default {
 }
 
 .el-radio-group{
+    width: 100%;
     label{
         margin: 6px 0;
         &:not(:first-child){

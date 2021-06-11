@@ -9,7 +9,7 @@
                 <span class="explanatoryText" v-if="itemT.typecode == 'A'"><i>*</i>员福类模板险种可增删</span>
                 <div class="kind-template">
                     <ul>
-                        <li v-for="(item,index) in itemT.insuranceTemplate" :key="index" @click="choiceTemplate(item.id,itemT.typecode)">
+                        <li v-for="(item,index) in itemT.insuranceTemplate" :key="index" @click="choiceTemplate(item.id,itemT.typecode)"  :vkshop-event-param="'选择模板'+item.id"  vkshop-event-name="选择模板"  vkshop-event-type="click">
                             <p class="template-title">{{item.name}}</p>
                             <p class="template-insurance" v-if="item.insurance.length!=0 && item.insurance[0].riskcode != ''">
                                 带险种：<span v-for="(itemI,indexI) in item.insurance" :key="indexI">
@@ -160,7 +160,7 @@ export default {
                         }).catch(action =>{
                             if(action === 'cancel'){//重新开始
                                 if(typecode == "A"){//非建工险
-                                    _that.$router.push({path:'/procedure/procedureOne'})
+                                    _that.$router.push({path:'/procedure/procedureOne',query:{mouldcode:typeId}})
                                 }else{//建工险
                                     // _that.$router.push({path:'/constructionProcess/constructionOne'})
                                     _that.$alert('建工险正在开发中，敬请期待','',{
@@ -174,7 +174,7 @@ export default {
                     }else{//若果为假，那么从头开始填写
 
                         if(typecode == "A"){//非建工险
-                            _that.$router.push({path:'/procedure/procedureOne'})
+                            _that.$router.push({path:'/procedure/procedureOne',query:{mouldcode:typeId}})
                         }else{//建工险
                             // _that.$router.push({path:'/constructionProcess/constructionOne'})
                              _that.$alert('建工险正在开发中，敬请期待','',{
@@ -193,7 +193,7 @@ export default {
                             if(response.data.code == 200){
                                 console.log(response)
                                 if(typecode == "A"){//非建工险
-                                    _that.$router.push({path:'/procedure/procedureOne'})
+                                    _that.$router.push({path:'/procedure/procedureOne',query:{mouldcode:typeId}})
                                 }else{//建工险
                                     // _that.$router.push({path:'/constructionProcess/constructionOne'})
                                      _that.$alert('建工险正在开发中，敬请期待','',{

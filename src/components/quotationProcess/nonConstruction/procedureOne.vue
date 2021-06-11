@@ -569,7 +569,7 @@ export default {
         }
     }
     .remove-procedure{
-        background: #ededed;
+        background: #f5f5f5;
         position: absolute;
         right: -10px;
         top: -10px;

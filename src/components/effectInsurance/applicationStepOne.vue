@@ -1,6 +1,6 @@
 <template>
 <!-- 申请第一步 -->
-    <div vkshop-event-scope="新建投保单-选询价">
+    <div vkshop-event-scope="新建投保单_选报价">
         <enterprise-name :enterpriseCurCall="enterpriseCurName"></enterprise-name>
         <div class="step-one" v-loading="initLoading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading">
             <p class="step-one-decro">*请选择一个有效报价<br><span>说明：选中后，该询价将展示在需客户盖章的投保资料中。</span></p>
@@ -12,7 +12,7 @@
             <div v-else v-show = "!initLoading">
                 <div class="policy-can">
                     <el-radio-group v-model="checkedPolicy" >
-                        <el-radio v-for="(item,index) in policys" :key="index" :label=item.proserialno class="pre-check-policy">
+                        <el-radio v-for="(item,index) in policys" :key="index" :label=item.proserialno class="pre-check-policy" :vkshop-event-param="'proserialno=' + item.proserialno" :vkshop-event-name="'选中此有效报价'+item.proserialno" vkshop-event-type="click">
                             <div class="policy-order">有效报价{{index+1}}</div>
                             <div class="per-policy">
                                 <p class="policy-no" @click.stop="lookDetail(item.proserialno)">询价号<span> {{item.proserialno}} <i class="el-icon-arrow-right"></i></span></p>
@@ -30,7 +30,7 @@
         <div class="footer-button" v-show = "!initLoading">
             <el-button @click="waiverModification">取消</el-button>
             <el-button @click="quickQuotation" v-if="policys.length == 0">快速报价</el-button>
-            <el-button  v-if="policys.length != 0" :disabled="checkedPolicy == null? true:false" :class="[checkedPolicy == null?'no-check':'']"  @click="nextStep">下一步</el-button>
+            <el-button  v-if="policys.length != 0" :disabled="checkedPolicy == null? true:false" :class="[checkedPolicy == null?'no-check':'']"  @click="nextStep"  vkshop-event-name="第一步_下一步" vkshop-event-type="click">下一步</el-button>
         </div>
     </div>
 </template>
@@ -198,7 +198,7 @@ $fontSize-fourteen: 14px;
         
     }
     button.no-check{
-        background: #999;
+        background: #bbb;
         color: #666;
     }
 }
@@ -219,6 +219,9 @@ $fontSize-fourteen: 14px;
 
 <style lang="scss">
 .step-one{
+    .el-radio-group{
+        width: 100%;
+    }
     .el-radio__input.is-checked+.el-radio__label .per-policy{
         color: #606266;
     }

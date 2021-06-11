@@ -13,8 +13,8 @@
             </div>
         </div>
         <div class="footer-button">
-            <el-button @click="waiverModification">稍后再说</el-button>
-            <el-button @click="nextStep" :disabled='times > 0 ? true: false' :class="[times > 0 ?'no-check':'']">准备好了<span v-show="times > 0">({{times}}s)</span></el-button>
+            <el-button @click="waiverModification" vkshop-event-name="第二步_稍后再说" vkshop-event-type="click">稍后再说</el-button>
+            <el-button @click="nextStep" :disabled='times > 0 ? true: false' :class="[times > 0 ?'no-check':'']" vkshop-event-name="第二步_准备好了" vkshop-event-type="click">准备好了<span v-show="times > 0">({{times}}s)</span></el-button>
         </div>
     </div>
 </template>
@@ -133,7 +133,7 @@ $fontSize-fourteen: 14px;
         
     }
     button.no-check{
-        background: #999;
+        background: #bbb;
         color: #666;
     }
 }

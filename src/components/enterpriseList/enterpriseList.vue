@@ -24,10 +24,10 @@
             <div class="enterprise-scroll" v-if="initLoading == true">
                 <!-- 全部项目为0 -->
                 <ul v-if="enterpriseList != null">
-                    <li v-for="(item,index) in enterpriseList" :key="index" @click.stop="lookProject(item)" >
-                        <div :vkshop-event-param="'project=' + item.proname" vkshop-event-name="切换项目" vkshop-event-type="click">
+                    <li v-for="(item,index) in enterpriseList" :key="index" @click.stop="lookProject(item)" :vkshop-event-param="'project=' + item.proname" :vkshop-event-name="'更换成此项目'+ item.proname" vkshop-event-type="click">
+                        <div>
                             <p class="enterprise-name">{{item.proname}}</p><p class="enterprise-time">项目创建时间：{{item.createtime}}</p>
-                            <p class="enterprise-follow-btn"><button v-if="item.isattention == '1'" class="follow" @click.stop="followClick(item.procode,index)">已关注</button><button class="no-follow" @click.stop="followClick(item.procode,index)" v-else>添加到关注</button></p>
+                            <p class="enterprise-follow-btn"><button :class="[item.isattention == '1'?'follow':'no-follow']" @click.stop="followClick(item.procode,index)">{{item.isattention == '1'?'已关注':'添加到关注'}}</button></p>
                             <i class="el-icon-arrow-right"></i>
                         </div>
                     </li>
@@ -243,7 +243,7 @@ export default {
             localStorage.setItem('YF_mainstream_project_code',event.procode)
             localStorage.setItem('YF_mainstream_project_isAttention',event.isattention)
             this.$clearTemporaryAll();//清楚所有步骤的信息
-            this.$router.push({path:'/',query:{procode:localStorage.getItem('YF_mainstream_project_code')}});
+            this.$router.push({path:'/',query:{procode:localStorage.getItem('YF_mainstream_project_code'),proname:event.proname}});
         },
         //返回上一步
         goHome: function(){

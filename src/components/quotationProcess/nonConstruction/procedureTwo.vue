@@ -194,7 +194,7 @@
                         <!-- 复制，添加按钮 -->
                         <p class="tip-move"><span style="color:red">*</span>左滑险种可以删除</p>
                         <div class="button-btn">
-                            <button @click="checkReplicate(index)" vkshop-event-name="复制本计划至其他计划" vkshop-event-type="click">复制本计划至其他计划</button><button @click.stop="addResponsibility(index)"><i class="el-icon-plus"></i>添加其他险种责任</button>
+                            <button @click="checkReplicate(index)" vkshop-event-name="复制本计划至其他计划" vkshop-event-type="click">复制本计划至其他计划</button><button @click="addResponsibility(index)"  vkshop-event-name="添加其他险种责任" vkshop-event-type="click"><i class="el-icon-plus"></i>添加其他险种责任</button>
                         </div>
                     </div>
                     <!-- 可收起展开块 -->
@@ -218,7 +218,7 @@
             <div v-for="(item,index0) in responsibilityList.allresponsibilityData" :key="index0" >
                 <p class="content-title"><span>{{item.risktype}}</span></p>
                 <ul>
-                    <li v-for="(subResponsibilityList,index3) in item.responsibilityData" :key="index3"  @click.stop="addResponsibilityNow(index0,index3)">
+                    <li v-for="(subResponsibilityList,index3) in item.responsibilityData" :key="index3"  @click.stop="addResponsibilityNow(index0,index3)" >
                         <div class="content-clause">
                             <i v-if="subResponsibilityList.ifMainInsurance == true"><img :src="zhu" alt=""></i>
                             <i v-else><img :src="fu" alt=""></i>

@@ -43,6 +43,8 @@ let compileParam = function (param) {
  */
 var getEventHandler = function (_eventType) {
     return function (eventTarget) {
+        console.log("神策: "+ eventTarget.localName)
+        console.log(eventTarget)
         // // 拿到事件发生的节点
         // var eventTarget = e.target,
         var eventType = eventTarget.getAttribute('vkshop-event-type') || 'click',
@@ -62,6 +64,10 @@ var getEventHandler = function (_eventType) {
                 // 最前面说明来源是h5
                 Log.push(['$WebClick_员福项目_' + scopes.join('_'), eventParam]);
                 
+            }else{
+                if(eventType == 'click'){
+                    Log.push(['$WebClick_员福项目_' + eventParam]);
+                }
             }
 
         }

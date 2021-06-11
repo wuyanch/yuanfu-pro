@@ -309,15 +309,17 @@ export default {
     margin-left: 15px;
     position: relative;
     display: inline-block;
+    padding: 0 5px;
     &::before{
       content: '';
       position: absolute;
       bottom: 0;
+      left: 0;
       height: 4px;
       width: 100%;
       background: #f7cc73;
-      border-top-right-radius: 5px;
-      border-bottom-left-radius: 5px;
+      border-top-right-radius: 4px;
+      border-bottom-left-radius: 4px;
       z-index: -1;
     }
   }

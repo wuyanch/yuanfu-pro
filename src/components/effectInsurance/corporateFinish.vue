@@ -23,7 +23,7 @@
             </div>
 
             <div class="footer-button" v-if="status == 3 || status == 4" style="margin-top:0px">
-                <el-button @click="waiverModification">稍后再说</el-button><el-button @click="godetermineI">是，去生成</el-button>
+                <el-button @click="waiverModification">稍后再说</el-button><el-button @click="godetermineI" vkshop-event-name="完成企业信息修改_立即生成投保单" vkshop-event-type="click">是，去生成</el-button>
             </div>
             <div class="footer-button" v-if="status == 1">
                 <el-button @click="waiverModification">好的，我知道了</el-button>

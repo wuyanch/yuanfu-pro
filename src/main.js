@@ -124,14 +124,19 @@ axios.interceptors.response.use(
 const user_id = window.localStorage.getItem("token") // 这个是必须要有唯一的id，可以取用户id
 sa.init({
   server_url: process.env.NODE_ENV==='production'?'/mybp/work/user/logdata':'/user/logdata', // 替换成自己的地址/MyBP
-  show_log: false, // 打印console，自己配置，可以看到自己是否踩点成功，以及
+  show_log: true, // 打印console，自己配置，可以看到自己是否踩点成功，以及//false
+  max_string_length: 3000,
   heatmap: {
      //是否开启点击图，默认 default 表示开启，自动采集 $WebClick 事件，可以设置 'not_collect' 表示关闭
      clickmap:'not_collect',
      //是否开启触达注意力图，默认 default 表示开启，自动采集 $WebStay 事件，可以设置 'not_collect' 表示关闭
      scroll_notice_map:'default',
      // 设置触达图的有效停留时间，默认超过4秒以上算有效停留
-     scroll_delay_time: 4000
+     scroll_delay_time: 4000,
+     //配置多一个收集标签
+     collect_tags:{
+            div : true
+      }
   }
 });
 sa.login(user_id);
