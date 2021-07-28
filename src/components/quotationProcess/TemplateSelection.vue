@@ -24,6 +24,8 @@
                     </ul>
                 </div>
             </div>
+            <!-- 到底部的提醒 -->
+             <p style="color:#999;text-align:center;padding:10px 0 5px;font-size:12Px">------------------- 已经到底部了 -------------------</p>
             <!-- 按钮 -->
             <div class="button-btn">
                 <button @click="goHome">返回项目主页</button><button @click="goPrev">上一步</button>
@@ -326,9 +328,12 @@ export default {
                     fun(0,null)
                 }
             }).catch(error =>{
+                this.loadingEaxc = false;
                 this.$alert('抱歉，程序开小差了o(╥﹏╥)o，请稍后再试，或者联系IT人员','',{
                     confirmButtonText:'好的，我明白了'
-                }).catch(()=>{})
+                }).catch(()=>{
+
+                })
             })
         },
         //把获得的数据放在localstorage里面
@@ -341,17 +346,25 @@ export default {
                 if(key == 'resp'){//第二步配置责任
                     if(res.resp != '' ){
                         if(res.resp[0].planName != null){
-                             let quotationInformation2 = {"configurationResponsibility":res.resp};
+                            let quotationInformation2 = {"configurationResponsibility":res.resp};
                             localStorage.setItem('quotationInformation_3',JSON.stringify(quotationInformation2));
                         }
                     }
                 }
                 if(key == 'conf'){//第三步配置条件
+                    let quotationInformation3 ;
                     if(res.conf != ''){
                         if(res.conf[0].planName != null){
-                            let quotationInformation3 = {"conditionsList":res.conf};
+                            quotationInformation3 = {"conditionsList":res.conf};
                             localStorage.setItem('quotationInformation_4',JSON.stringify(quotationInformation3));
                         }
+                    }else if(res.conf.length == 0 && res.tempsavestep > 2){//暂存数据小于第三步且长度为0，说明没有需要配置的险种
+                        let confTemp = [];
+                        res.plan.forEach(item => {
+                            confTemp.push({planName: item.activeName, planCode: item.planCode, data:[]});
+                        });
+                        quotationInformation3 = {"conditionsList":confTemp};
+                        localStorage.setItem('quotationInformation_4',JSON.stringify(quotationInformation3));
                     }
                 }
                 if(key == 'other'){//第四步其他

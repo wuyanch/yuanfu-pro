@@ -268,7 +268,7 @@ $fontSize-fourteen: 14px;
                 position: absolute;
                 top: 0;
                 right: 0;
-                padding: 5px 5px 5px 30px;
+                padding: 8px 5px 5px 27px;
                 border: none;
             }
             i{

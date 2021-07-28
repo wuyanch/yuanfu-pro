@@ -22,7 +22,9 @@
                                 <div v-if="(currentStatus == 3 || currentStatus == 4) && InquiryResult.length != 0">
                                     <div v-if="InquiryResult[0].applyopinion != '' && InquiryResult[0].applyopinion != null">
                                         <p class="part-pre-title">核保意见</p>
-                                        <p><b v-if="InquiryResult[0].conclusion == 4">通过，</b><b v-else>不通过，</b>{{InquiryResult[0].applyopinion}}</p>
+                                        <!-- <p><b v-if="InquiryResult[0].conclusion == 4">通过，</b><b v-else>不通过，</b>{{InquiryResult[0].applyopinion}}</p> -->
+                                        <p><b>{{InquiryResult[0].conclusion == 4?'通过。':'不通过。'}}</b></p>
+                                        <el-input type="textarea" v-model=InquiryResult[0].applyopinion  readonly="readonly" autosize resize='none' ></el-input>
                                     </div>
                                     <div v-if="InquiryResult[0].speagree != '' && InquiryResult[0].speagree != null">
                                         <p class="part-pre-title">特别约定</p>
@@ -39,7 +41,7 @@
                                         <p class="confidential confidential-tip">注意：申请方案可能与批复方案不同，批复方案详见下表。</p>
                                         <ul class="part-suans">
                                             <li v-for="(item,index) in planHbFeeA" :key="index">
-                                                <span>计划{{index+1}}</span>
+                                                <!-- <span>计划{{index+1}}</span>
                                                 <span class="part-mony">{{item.allFee}}</span>
                                                 <span class="part-mony-unit">元/人</span>
                                                 <span class="part-mony-x">×</span>
@@ -47,9 +49,10 @@
                                                 <span class="part-mony-unit">人</span>
                                                 <span>=</span>
                                                 <span class="part-mony">{{item.planCalcFeeA | addDouHao}}</span>
-                                                <span class="part-mony-unit">元</span>
+                                                <span class="part-mony-unit">元</span> -->
+                                                <span>计划{{index+1}}</span><span class="plan-part-mony"><b>{{item.allFee}}</b> 元/人 × <b>{{item.num}}</b> 人 = <b>{{item.planCalcFeeA | addDouHao}}</b> 元</span>
                                             </li>
-                                            <li class="part-li-last"><span>总计</span><span class="part-mony-all"> {{hbAllPlanFee | addDouHao}}<i> 元</i></span></li>
+                                            <li class="part-li-last"><span>总计</span><span class="part-mony-all"> {{hbAllPlanFee | addDouHaoH}}<i> 元</i></span></li>
                                         </ul>
                                         <p>报价有效期：截止 {{InquiryResult[0].loseefficacytime instanceof Array?InquiryResult[0].loseefficacytime[0]+'-'+(InquiryResult[0].loseefficacytime[1]>9?InquiryResult[0].loseefficacytime[1]:'0'+InquiryResult[0].loseefficacytime[1])+'-'+InquiryResult[0].loseefficacytime[2]:InquiryResult[0].loseefficacytime.replace(/T/,' ').slice(0,16)}}</p>
                                     </div>
@@ -157,7 +160,7 @@
                                                                     </span> {{item41.amountunit}}</span>
                                                                 <div  v-if="item41.confList != null">
                                                                     <p class="kind-explain-1 desc kind-explain-nochild" v-for="(item41_sub,index41_sub) in item41.confList" :key="index41_sub">
-                                                                        <span>{{item41_sub.levelname}}:</span>
+                                                                        <span>{{item41_sub.levelname}}：</span>
                                                                         <span>
                                                                             {{item41_sub.levelvalue}}
                                                                         </span>
@@ -195,7 +198,7 @@
                                                                 </p>
                                                                 <div class="kind-explain-1 kind-explain-2 desc" v-if="item42.confList != null">
                                                                     <p  v-for="(item42_sub,index42_sub) in item42.confList" :key="index42_sub">
-                                                                    <span>{{item42_sub.levelname}}:</span>
+                                                                    <span>{{item42_sub.levelname}}：</span>
                                                                         <span><span v-if="item42_sub.levelvalue < 0">按照社保标准</span><span v-else>{{item42_sub.levelvalue}}</span>
                                                                         </span>
                                                                     </p>
@@ -230,7 +233,7 @@
                                                             
                                                                 <div  v-if="item41.confList != null">
                                                                     <p class="kind-explain-1 desc kind-explain-nochild" v-for="(item41_sub,index41_sub) in item41.confList" :key="index41_sub">
-                                                                        <span>{{item41_sub.levelname}}:</span>
+                                                                        <span>{{item41_sub.levelname}}：</span>
                                                                         <span v-if="item41_sub.hbvalue != null"><i class="after-hbchange">{{item41_sub.hbvalue}}</i>
                                                                             <el-tooltip placement="top" class="item" effect="dark" v-if="item41_sub.hbvalue != item41_sub.levelvalue">
                                                                                 <div slot="content">申请设置条件为：{{item41_sub.levelvalue}}</div>
@@ -291,7 +294,7 @@
                                                                 </p>
                                                                 <div class="kind-explain-1 kind-explain-2 desc" v-if="item42.confList != null">
                                                                     <p  v-for="(item42_sub,index42_sub) in item42.confList" :key="index42_sub">
-                                                                    <span>{{item42_sub.levelname}}:</span>
+                                                                    <span>{{item42_sub.levelname}}：</span>
                                                                         <span v-if="item42_sub.hbvalue != null"><i class="after-hbchange" v-if="item42_sub.hbvalue < 0">按照社保标准</i><i v-else class="after-hbchange">{{item42_sub.hbvalue}}</i>
                                                                             <el-tooltip placement="top" class="item" effect="dark" v-if="item42_sub.hbvalue != item42_sub.levelvalue">
                                                                                 <div slot="content">申请设置条件为：{{item42_sub.levelvalue}}</div>
@@ -316,7 +319,7 @@
                                     <div class="plan-base" >
                                         <p v-if="currentStatus == 1 || currentStatus == 2">本计划期望保费(元/人)：<span class="mony"><span class="mony-before">{{item1.premium | numFilterBefore}}</span>.<span class="mony-after">{{item1.premium | numFilterAfter}}</span></span></p>
                                         <div v-else>
-                                            <span>合计保费：<span class="mony"><span class="mony-before">{{planHbFeeA[index1].allFee | numFilterBefore}}</span>.<span class="mony-after">{{planHbFeeA[index1].allFee | numFilterAfter}}</span></span>元/人 × {{planHbFeeA[index1].num}}人 = {{planHbFeeA[index1].planCalcFeeA | addDouHao}} 元</span>
+                                            <span>合计保费：<span class="mony-h"><span class="mony-before">{{planHbFeeA[index1].allFee | numFilterBefore}}</span>.<span class="mony-after">{{planHbFeeA[index1].allFee | numFilterAfter}}</span></span>元/人 × {{planHbFeeA[index1].num}}人 = {{planHbFeeA[index1].num | MonyLast(planHbFeeA[index1].allFee)}} 元</span>
                                             <el-tooltip placement="top" class="item" effect="dark">
                                                 <div slot="content">申请设置条件为：{{item1.premium}}(元/人)</div>
                                                 <el-button class="hbchange"><i class="el-icon-warning-outline"></i>原申请保费</el-button>
@@ -512,8 +515,7 @@ export default {
         calculationPremium: function(param){
             let that = this;
             param.forEach((current,index) => {
-                let planHbFee = 0;
-                let planCalcFee = 0;
+                let planHbFee = 0,planCalcFee = 0;
                 current.inquiryVoList.forEach((currentList,indexList)=>{
                     currentList.riskListVo.forEach((currentListVo,indexListVo)=>{
                         currentListVo.respList.forEach((currentListVoResp,indexListVoResp)=>{
@@ -529,6 +531,7 @@ export default {
                     planCalcFeeA:planCalcFee
                 })
             });
+             that.hbAllPlanFee = that.hbAllPlanFee.toFixed(2);
         },
         //计算dynamicValidateFormOpen
         calcFormOpen: function(param){
@@ -540,7 +543,9 @@ export default {
         //展开-收起
         changeBlock: function(event){
           this.dynamicValidateFormOpen[event].open = !this.dynamicValidateFormOpen[event].open;
-        }
+        },
+         
+        
         
     },
     //变换数字
@@ -558,6 +563,19 @@ export default {
         addDouHao: function(value){
             let newPrice = value.toString().replace(/(\d)(?=(?:\d{3})+$)/g,'$1,')
             return newPrice
+        },
+        addDouHaoH: function(value){
+            let moneyL = value.toString().split('.')[1]? value.toString().split('.')[1]:'00';
+            let money = value.toString().split('.')[0].toString().replace(/(\d)(?=(?:\d{3})+$)/g,'$1,');
+            return (money+'.'+moneyL)
+        },
+        //钱
+        MonyLast: function(people,permony){
+            let m = 2,money = 0;
+            money = Number((permony)*100) * Number(people) / Math.pow(10, m);
+            let moneyL = money.toString().split('.')[1]? money.toString().split('.')[1]:'00';
+            money = money.toString().split('.')[0].toString().replace(/(\d)(?=(?:\d{3})+$)/g,'$1,');
+            return (money+'.'+moneyL)
         }
     }
 }
@@ -675,6 +693,9 @@ export default {
             }
             
         }
+        .plan-part-mony{
+            float: right;
+        }
         .part-mony{
             display: inline-block;
             min-width: 40px;
@@ -698,7 +719,6 @@ export default {
             // display: inline-block;
             text-align: right;
             float: right;
-            margin-right: 5px;
             font-weight: 700;
             i{
                 font-weight: 400;
@@ -709,6 +729,11 @@ export default {
     }
     .mony{
         color: #f5b556;
+        font-weight: 700;
+    }
+    .mony-h{
+        color: red;
+        font-weight: 700;
     }
     .mony-before{
         font-size: 12.5px;
@@ -1074,8 +1099,11 @@ export default {
     }
     .el-textarea__inner{
         border: none;
+        font-size:12px;
+        color: #373737;
         padding-left: 0;
         padding-right: 0;
     }
+    
 }
 </style>

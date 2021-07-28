@@ -201,7 +201,8 @@
 
 <script>
  // 引入image-conversion
-import {compress, compressAccurately, imageConversion} from 'image-conversion';
+// import {compress, compressAccurately, imageConversion} from 'image-conversion';
+import * as imageConversion from 'image-conversion';
 import { error } from 'util';
 export default {
     name:'procedureFinish',
@@ -356,7 +357,19 @@ export default {
 		fileRequest(file) {
             // this.fileData.append('files', file.file);  // append增加数据
         },
-     
+        //超时
+         delayPromise: function(ms) {
+            return new Promise(function (resolve) {
+                setTimeout(resolve, ms);
+            });
+        },
+        timeoutPromise: function (promise, ms) {
+            let timeout = this.delayPromise(ms).then(function () {
+                    throw new Error('已超时,请重新提交');
+                });
+            return Promise.race([promise, timeout]);
+        },
+
         uploadFile(fun) {
             let that = this;
             // this.fileData = new FormData();  // new formData对象
@@ -373,7 +386,7 @@ export default {
                 }
             }
             Promise.all([
-               this.compressPhoto()
+               this.timeoutPromise(this.compressPhoto(),150000)//设置5分钟为超时
             ]).then(resp=>{
                 console.log(this.fileData.getAll("files"))
                 that.fileData.append('proserialno',localStorage.getItem('YF_quotationInformation_proserialno'));
@@ -426,12 +439,19 @@ export default {
                 }else{
                     fun("100");
                 }
+            }).catch((error) => {
+                that.$alert(error,'报错',{
+                    confirmButtonText:'好的'
+                }).then(()=>{
+                    that.loading = false;
+                    that.loadingPic==null?null:that.loadingPic.close();
+                })
+                
             })
            
         },
         //压缩图片上传
         compressPhoto:function(){
-            
             let _that = this;
             this.fileData.delete("files");
             this.fileData.delete("proserialno");
@@ -444,11 +464,11 @@ export default {
                     let currentList = [];
                     _that.fileList.forEach(function(current,index){
                         if(current.status == 'ready'){
-                            let isLt2M = current.size / 1024 / 1024 < 2 // 判定图片大小是否小于2MB
+                            let isLt2M = current.size / 1024 / 1024  < 4 // 判定图片大小是否大于4MB
                             if (!isLt2M) {
                             flag = false;
-                            console.log(current) // 压缩到400KB,这里的400就是要压缩的大小,可自定义
-                            imageConversion.compressAccurately(current.raw,1024).then(res=>{
+                            console.log(current) // 压缩到400KB,这里的400就是要压缩的大小,可自定义--compressAccurately--按照大小 compress--按照质量
+                            imageConversion.compressAccurately(current.raw,current.size / 1024 / 2 ).then(res=>{
                                     //The res in the promise is a compressed Blob type (which can be treated as a File type) file;
                                     console.log(res);
                                     // let myFile = new File([res], current.name);
@@ -462,6 +482,10 @@ export default {
                                         console.log(_that.fileData.getAll('files'))
                                         return resolve();
                                     }
+                                }).catch((error) => {
+                                    console.log("压缩图片");
+                                    console.log(error);
+                                    return reject("第"+ (index+1) +"张图片压缩失败")
                                 })
                             
                             }else{
@@ -506,6 +530,14 @@ export default {
                 let name = file.name, flag = false;
                 let type = name.substring(name.lastIndexOf('.')+1)
                 if (type == 'png' || type == 'jpg' || type == 'bmp'|| type == 'jpeg') {
+                    let currentSize = file.size / 1024 / 1024;
+                    if(currentSize >= 20){
+                        this.$message({
+                                message: '上传单张图片已超过20M,不符合大小已剔除',
+                                type: 'warning'
+                            });
+                        fileList.pop();
+                    }
                     // return true;
                 }else{
                     this.$message({
@@ -663,7 +695,7 @@ export default {
                 temD.forEach(function(currentTemdValue,indexTemd){
                     let flag = false;
                     let nowIndex ;
-                    if(temD_4.length > 0){
+                    if( temD_4 && temD_4.length > 0){
                         temD_4.forEach(function(currentTemdAValue,indexTemdA){
                             if(currentTemdValue.responsibilityCode == currentTemdAValue.responsibilityCode){
                                 //判断有大类

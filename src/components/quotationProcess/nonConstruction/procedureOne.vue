@@ -143,7 +143,7 @@
             <el-input placeholder="输入工种关键字搜索职业类别" v-model="cateKeyword" class="input-with-select">
                 <el-button slot="append" icon="el-icon-search" @click="searchCate"></el-button>
             </el-input>
-            <div v-if="tableData.length != 0">
+            <div v-if="tableData.length != 0"  v-loading="selectLoading"  element-loading-text="拼命搜索中" element-loading-spinner="el-icon-loading">
                 <el-table
                     :data="tableData"
                     stripe
@@ -169,7 +169,7 @@
                     </el-table-column>
                 </el-table>
             </div>
-            <div v-else class="cate-nodata">
+            <div v-else class="cate-nodata" v-loading="selectLoading"  element-loading-text="拼命搜索中" element-loading-spinner="el-icon-loading">
                 <img :src="[cateImg?cateImgA:cateImgB]" alt="" srcset="">
                 <p>{{cateMsg}}</p>
             </div>
@@ -222,7 +222,8 @@ export default {
             cateImg:false,
             cateImgA:require('@a/img/nodata.png'),
             cateImgB:require('@a/img/no-result.png'),
-            cateMsg:'等待输入关键字搜索'
+            cateMsg:'等待输入关键字搜索',
+            selectLoading: false
         }
     },
     created(){
@@ -463,7 +464,7 @@ export default {
         cateVisible: function(){
             this.cateKeyword = null;
             this.tableData = [];
-            this.cateImg=false;
+            this.cateImg= false;
             this.cateMsg='等待输入关键字搜索';
             this.catedialogVisible = true;
         },
@@ -475,10 +476,12 @@ export default {
                 this.$alert('关键字不能为空')
                 return
             }else{
+                this.selectLoading = true;
                 this.$axios.post('/index/getProfessTypeBySpeciesname',{
                     speciesname:this.cateKeyword,
                     rand:new Date().getTime()
                 }).then(response => {
+                    this.selectLoading = false;
                     console.log("搜索职业类别")
                     console.log(response)
                     if(response.data.code == 200){
@@ -543,7 +546,6 @@ export default {
         color: #c5c5c5;
         line-height: 10px;
         margin-top: -4px;
-        text-align: left !important;
         text-align: -webkit-left;
     }
     .el-form-item{
@@ -769,6 +771,11 @@ export default {
     }
     .el-input-group>.el-input__inner{
         vertical-align: middle  !important;
+    }
+    .cate-dialog {
+        .el-loading-mask{
+            background: rgba(255, 255, 255, 1);
+        }
     }
 }
 .procedure-content{

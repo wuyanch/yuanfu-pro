@@ -55,6 +55,7 @@
                                             v-model="allresponsibilityItem.ifDefaultConfiguration"
                                             active-color="#6db9fe"
                                             inactive-color="#d4d4d4"
+                                            @change='changeStatusOO($event,index2,index1,index)'
                                             >
                                             </el-switch>
                                     </div>
@@ -398,21 +399,24 @@ export default {
                     let a =  this.configurationResponsibility.domains[index].data[index1].responsibilityData[index2].subResponsibilityData[0].subIfDefaultConfiguration;
                     let b =  this.configurationResponsibility.domains[index].data[index1].responsibilityData[index2].subResponsibilityData[1].subIfDefaultConfiguration;
                     let c =  this.configurationResponsibility.domains[index].data[index1].responsibilityData[index2].subResponsibilityData[2].subIfDefaultConfiguration;
-                    if(a == false && b == false && c == false){
-                        this.$alert('门诊，住院，女性生育至少保留一个', '', {
+                    // #20210628
+                    if(a == false && b == false){//根据不能只有单独的生育险 a == false && b == false && c == false
+                        this.$alert('门诊医疗、住院医疗 至少保留一个', '', {
                             confirmButtonText: '确定',
                             callback: action => {
                                 this.configurationResponsibility.domains[index].data[index1].responsibilityData[index2].subResponsibilityData[index3].subIfDefaultConfiguration=true;
                             }
                      });
                     }
-                }else{
-                   let a =  this.configurationResponsibility.domains[index].data[index1].responsibilityData[index2].subResponsibilityData[0].subIfDefaultConfiguration;
-                   let b =  this.configurationResponsibility.domains[index].data[index1].responsibilityData[index2].subResponsibilityData[1].subIfDefaultConfiguration;
-                   if(a&&b){
-                       this.configurationResponsibility.domains[index].data[index1].responsibilityData[index2].ifDefaultConfiguration = true;
-                   }
                 }
+                // else{
+                //    let a =  this.configurationResponsibility.domains[index].data[index1].responsibilityData[index2].subResponsibilityData[0].subIfDefaultConfiguration;
+                //    let b =  this.configurationResponsibility.domains[index].data[index1].responsibilityData[index2].subResponsibilityData[1].subIfDefaultConfiguration;
+                //    //2021年7月16日15:51:21 修改打开生育险，会触发共享
+                //    if(a && b && index3 != 2){
+                //        this.configurationResponsibility.domains[index].data[index1].responsibilityData[index2].ifDefaultConfiguration = true;
+                //    }
+                // }
                 if(index3 != 2 && $event == false){
                     this.configurationResponsibility.domains[index].data[index1].responsibilityData[index2].ifDefaultConfiguration = false;
                 }
@@ -451,6 +455,13 @@ export default {
                 }
             }
             console.log($event+','+index3+','+index2+','+index1+','+code)//false,0,0,1,604
+        },
+        //changeStatusOO--110是否共享按钮change时间
+        changeStatusOO: function($event,index2,index1,index){
+            if($event == true){
+                this.configurationResponsibility.domains[index].data[index1].responsibilityData[index2].subResponsibilityData[0].subIfDefaultConfiguration = true;
+                this.configurationResponsibility.domains[index].data[index1].responsibilityData[index2].subResponsibilityData[1].subIfDefaultConfiguration = true;
+            }
         },
         //删除险种
         deleteItem: function(index,index1,index2){
@@ -1102,7 +1113,7 @@ export default {
         }
     }
     .content-clause{
-        font-size: 13px;
+        font-size: 14px;
         margin-top: 10px;
         padding: 5px 0;
         i{
@@ -1242,12 +1253,12 @@ export default {
     }
 }
 .content-clause{
-    font-size: 12px;
+    font-size: 14px;
     i{
         img{
             width: 12px;
             vertical-align: baseline;
-            padding-left: 1px;
+            padding-right: 4px;
         }
     }
 }

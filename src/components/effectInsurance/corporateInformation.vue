@@ -671,9 +671,9 @@ export default {
                     //校验通过之后
                     if(this.status != 3 && this.status != 4){
                         if(this.enterpriseCurName != this.unitForm.subproname){
-                            tipContent = '投保单位名称：<span style="color:red;">'+ this.unitForm.subproname + '</span><br/>投保单位名称与 询价的项目( '+this.enterpriseCurName+' ) 名称不一致，请确认录入是否正确。<br/>若信息录入无误，将需 团核人员审核。<br/>请确认是否提交。'
+                            tipContent = '投保单位名称：<span style="color:red;">'+ this.unitForm.subproname + '</span><br/>投保单位名称与 询价的项目名称<b>( '+this.enterpriseCurName+' ) </b>不一致，请确认录入是否正确。<br/>若信息录入无误，将需<b> 团核人员审核</b>。<br/><br/>请确认是否提交。'
                         }else{
-                            tipContent = '投保单位名称：<span style="color:red;">'+ this.unitForm.subproname + '</span><br/>需与投保时提供的营业执照名称一致。<br/>成功创建后，将无法修改。<br/>请确认是否提交。'
+                            tipContent = '投保单位名称：<span style="color:red;">'+ this.unitForm.subproname + '</span><br/>需与投保时提供的营业执照名称一致。<br/>成功创建后，将无法修改。<br/><br/>请确认是否提交。'
                         }
                         
                     }else{
@@ -681,7 +681,7 @@ export default {
                     }
                     this.$confirm(tipContent, '提示', {
                         confirmButtonText: '确认提交',
-                        cancelButtonText: '放弃',
+                        cancelButtonText: '再想想',
                         dangerouslyUseHTMLString: true
                     }).then(() => {
                         this.submitloading = true;
@@ -703,7 +703,7 @@ export default {
                             console.log(that.unitForm)
                         }
                         console.log('提交数据'+this.unitForm)
-                        that.$axios.post('/index/saveSubpro',that.unitForm).then(response=>{
+                        that.$axios.post('/index/saveSubpro',that.unitForm,{timeout:3000}).then(response=>{
                             console.log(response);  
                             if(response.data.code == 200){
                                 if(that.status == 3 || that.status == 4){//即将前往完成页面
@@ -718,6 +718,11 @@ export default {
                             }   
                             this.submitloading = false;
                             console.log('提交结束');  
+                        }).catch((error) => {
+                            this.submitloading = false;
+                            if(error.code == "ECONNABORTED"){//超时
+                                this.$alert("请求超时，请重新提交",'温馨提示')
+                            }
                         })
                     }).catch(() => {
                                 
@@ -1190,6 +1195,8 @@ export default {
         border: none;
     }
     textarea{
+        height: auto;
+        min-height: 51px;
         border: none;
         padding-left: 0;
         padding-right: 0;
@@ -1260,6 +1267,7 @@ export default {
     margin: 0 auto;
     border: 1px solid #ddd;
     top: -15px;
+    padding-top:10px;
     .el-form-item{
         .el-form-item__label{
             width: 195px;

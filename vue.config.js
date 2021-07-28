@@ -16,9 +16,13 @@ module.exports = {
     // 指定子路径。比如将你的应用部署在
     // https://www.foobar.com/my-app/
     // 那么将这个值改为 '/my-app/'
+    // publicPath: process.env.NODE_ENV === 'production'
+    // ? '/mybp/'
+    // : '/',// 构建好的文件输出到哪里
     publicPath: process.env.NODE_ENV === 'production'
-    ? '/mybp/'
+    ? '/app/'
     : '/',// 构建好的文件输出到哪里
+
    
     outputDir: "dist", //生成的生产环境构建文件的目录 where to put static assets (js/css/img/font/...) // 是否在保存时使用‘eslint-loader’进行检查 // 有效值: true | false | 'error' // 当设置为‘error’时，检查出的错误会触发编译失败
     assetsDir:"static",//放置生成的静态资源 (js、css、img、fonts) 的 (相对于 outputDir 的) 目录。
@@ -96,7 +100,7 @@ module.exports = {
       hotOnly: false, // See https://github.com/vuejs/vue-cli/blob/dev/docs/cli-service.md#configuring-proxy
       proxy:{
         '/': {    //将www.exaple.com印射为/apis
-            target: 'https://tiknagyuanfuqahdegzo.cn.utools.club',  //https://gfdioguafewsoruwe794.cn.utools.club  http://tktk.cn1.utools.club http://gdbbc.pension.taikang.com/mybp/work      https://apptest.utools.club 
+            target: 'http://106.53.125.63:8080/',  //http://b4d0d4879105.ngrok.io/ http://pydiylc.nat.ipyingshe.com/mybp/ https://tiknagyuafgresgg.cn.utools.club http://gdbbc.pension.taikang.com/mybp/work http://gdbbc.pension.taikang.com/mybp/work https://gfdioguafewsoruwe794.cn.utools.club  http://tktk.cn1.utools.club http://gdbbc.pension.taikang.com/mybp/work      https://apptest.utools.club 
             secure: false,  // 如果是https接口，需要配置这个参数
             changeOrigin: true,  //是否跨域
             pathRewrite: {
@@ -109,5 +113,5 @@ module.exports = {
     // 第三方插件配置
     pluginOptions: {
      
-    }
+    } 
   };

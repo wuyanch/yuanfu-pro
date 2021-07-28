@@ -428,7 +428,7 @@ export default {
         li.newLaunch::after{
           content: '新';
           width: 45px;
-          line-height: 20px;
+          line-height: 18px;
           color: white;
           position: absolute;
           background: #f83e47;
@@ -465,8 +465,6 @@ export default {
 </style>
 
 <style lang="scss">
-.el-select--medium,.el-input__inner{
-  vertical-align: bottom !important;
-}
-
+.el-select--medium,.el-input__inner{vertical-align: bottom !important;}
+input,textarea{-webkit-appearance: none;appearance: none;}
 </style>

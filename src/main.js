@@ -6,8 +6,12 @@ import App from './App'
 
 import router from './router'
 
-import ElementUI, { Message, Alert } from 'element-ui';
+import ElementUI, { Message } from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+//引入只弹出一次弹框的报错
+import domMessage from './js/messageOnce'
+// new 对象实例
+const messageOnce = new domMessage()
 
 //引入淘宝的自适应js
 // import 'lib-flexible/flexible.js'--20210427无法适配安卓手机，展示放下
@@ -44,8 +48,10 @@ Vue.prototype.$axios = axios;
 
 
 
-axios.defaults.baseURL = process.env.NODE_ENV==='production'?'http://gdbbc.pension.taikang.com/mybp/work':'' //服务器地址
+// axios.defaults.baseURL = process.env.NODE_ENV==='production'?'http://gdbbc.pension.taikang.com/mybp/work':'' //服务器地址
+axios.defaults.baseURL = process.env.NODE_ENV==='production'?'http://106.53.125.63:8080/mybp':'' //服务器地址
 axios.defaults.crossDomain = true;
+// axios.defaults.timeout = 30000;//设计超时 30S为超时
 axios.defaults.withCredentials = true;  //设置cross跨域 并设置访问权限 允许跨域携带cookie信息
 axios.defaults.headers.common['Authorization'] = ''; // 设置请求头为 Authorization
 
@@ -73,6 +79,7 @@ axios.interceptors.response.use(
       if(response.headers.hasOwnProperty("authorization")){
         localStorage.setItem('token',response.headers.authorization);
       }
+      Message.close;//关闭弹窗
       return Promise.resolve(response);
     } else {
       return Promise.reject(response);
@@ -85,36 +92,45 @@ axios.interceptors.response.use(
   error => {
     if (error.response.status) {
       switch (error.response.status) {
-        // 401: 未登录
+        // 401: 未登录 或  token过期
         // 未登录则跳转登录页面，并携带当前页面的路径
         // 在登录成功后返回当前页面，这一步需要在登录页操作。
         case 401:
           router.push({name:'overLogin'})
           break;
-        // 403 token过期
-        // 登录过期对用户进行提示
-        // 清除本地token和清空vuex中token对象
-        // 跳转登录页面
-        case 403:
-          // vant.Toast.fail("登录过期，请关闭重新进入。");
-          // 清除token
-          break;
 
         // 404请求不存在
         case 404:
           router.push({name:'error'})
-          // vant.Toast.fail("您访问的网页不存在。");
-
           break;
+          
         case 502:
+          messageOnce.error({
+            showClose: true,
+            message: '502网关有问题',
+            type: 'error',
+            duration:0
+          });
           console.log('502网关有问题')
           break;
         // 其他错误，直接抛出错误提示
+
+        case 500:
+          messageOnce.error({
+            showClose: true,
+            message: '服务器连接不上，请联系IT小管家',
+            type: 'error',
+            duration:0
+          });
+
         default:
           // vant.Toast.fail(error.response.data.message);
           // router.push({name:'overLogin'})
       }
       return Promise.reject(error.response);
+    }
+    if(error.code == "ECONNABORTED"){//超时
+       return Promise.reject(error.response);
     }
   }
 );
@@ -124,7 +140,7 @@ axios.interceptors.response.use(
 const user_id = window.localStorage.getItem("token") // 这个是必须要有唯一的id，可以取用户id
 sa.init({
   server_url: process.env.NODE_ENV==='production'?'/mybp/work/user/logdata':'/user/logdata', // 替换成自己的地址/MyBP
-  show_log: true, // 打印console，自己配置，可以看到自己是否踩点成功，以及//false
+  show_log: false, // 打印console，自己配置，可以看到自己是否踩点成功，以及//false
   max_string_length: 3000,
   heatmap: {
      //是否开启点击图，默认 default 表示开启，自动采集 $WebClick 事件，可以设置 'not_collect' 表示关闭
@@ -157,12 +173,6 @@ Log.init()
 
 
 /* eslint-disable no-new */
-// new Vue({
-//   el: '#app',
-//   router,
-//   components: { App },
-//   template: '<App/>'
-// })
 new Vue({
   router,
   render: function (h) { return h(App) },

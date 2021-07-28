@@ -32,7 +32,7 @@
                      <!-- 头部 -->
                     <div class="part-head">
                         <span>业务信息</span>
-                        <el-button  @click="changeBlock(1)"><span v-if="dynamicValidateFormOpen[1].open">收起<i class="el-icon-d-arrow-right"></i></span><span v-else>展开<i class="el-icon-d-arrow-left"></i></span></el-button>
+                        <el-button  @click="changeBlock(1)">{{dynamicValidateFormOpen[1].open?'收起':'展开'}}<i :class="[dynamicValidateFormOpen[1].open?'el-icon-d-arrow-right':'el-icon-d-arrow-left']"></i></el-button>
                     </div>
                     <!-- 内容 -->
                     
@@ -50,7 +50,7 @@
                     <!-- 头部 -->
                     <div class="part-head">
                         <span>补充信息</span>
-                        <el-button  @click="changeBlock(2)"><span v-if="dynamicValidateFormOpen[2].open">收起<i class="el-icon-d-arrow-right"></i></span><span v-else>展开<i class="el-icon-d-arrow-left"></i></span></el-button>
+                        <el-button  @click="changeBlock(2)">{{dynamicValidateFormOpen[2].open?'收起':'展开'}}<i :class="[dynamicValidateFormOpen[2].open?'el-icon-d-arrow-right':'el-icon-d-arrow-left']"></i></el-button>
                     </div>
                     <!-- 内容 -->
                     <div class="part-content part-remark" v-if="dynamicValidateFormOpen[2].open">
@@ -79,7 +79,8 @@
                     <!-- 头部 -->
                     <div class="part-head">
                         <span>计划{{index1+1}}({{item1.planName}})</span>
-                        <el-button  @click="changeBlock(index1+3)"><span v-if="dynamicValidateFormOpen[index1+3].open">收起<i class="el-icon-d-arrow-right"></i></span><span v-else>展开<i class="el-icon-d-arrow-left"></i></span></el-button>
+                        <!-- <el-button  @click="changeBlock(index1+3)"><span v-if="dynamicValidateFormOpen[index1+3].open">收起<i class="el-icon-d-arrow-right"></i></span><span v-else>展开<i class="el-icon-d-arrow-left"></i></span></el-button> -->
+                        <el-button  @click="changeBlock(index1+3)">{{dynamicValidateFormOpen[index1+3].open?'收起':'展开'}}<i :class="[dynamicValidateFormOpen[index1+3].open?'el-icon-d-arrow-right':'el-icon-d-arrow-left']"></i></el-button>
                     </div>
                     <!-- 内容 -->
                     <div class="part-content" v-if="dynamicValidateFormOpen[index1+3].open">
@@ -144,6 +145,8 @@
                        </div>
                     </div>
                 </div>
+                <!-- 到底部的提醒 -->
+                <p style="color:#999;text-align:center;padding:10px 0 5px;font-size:12Px">------------------- 已经到底部了 -------------------</p>
             </div>
         </div>
 
@@ -434,7 +437,7 @@ export default {
                     that.$router.push({name:'procedureFinish',params:{"proserialno":localStorage.getItem('YF_quotationInformation_proserialno')}})
                  }else{//上传报错
                     that.loadingTJ = false;
-                    that.$alert('抱歉，程序开小差了o(╥﹏╥)o，请稍后再试，或者联系IT人员','',{
+                    that.$alert(response.data.msg?response.data.msg:'抱歉，程序开小差了o(╥﹏╥)o，请稍后再试，或者联系IT人员','',{
                         confirmButtonText:'好的，我知道了'
                     }).catch(()=>{})
 
@@ -465,7 +468,7 @@ export default {
 .preview-content{
     margin-top: 100px;
     overflow: hidden;
-    height: calc(100vh - 145px);
+    height: calc(100vh - 20vh);
     .preview-scroll{
         height: 100%;
         overflow: scroll;

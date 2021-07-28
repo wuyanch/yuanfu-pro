@@ -6,8 +6,7 @@
             <div class="determine-information-content" v-if="!initLoading" >
                 <!-- 投保单位 -->
                 <div class="information-content-part information-content-unit">
-                    <p class="unit-mo"><span>投保单位：</span><span>{{subprojectName}}</span></p>
-                    <p class="tip-content">（需与证件上的完整名称及公章一致。）</p>
+                   <p><span class="information-name">{{subprojectName}}</span><span>投保单位</span><span class="tip-content">（需与证件上的完整名称及公章一致。）</span></p>
                 </div>
                 <!-- 确定计划和人数 -->
                 <div class="information-content-part information-content-plan">
@@ -24,7 +23,7 @@
                         </div>
                         <div class="plan-detail">
                             <div :class="[prePlan.isprint == 0?'no-print':'','plan-detail-div']" v-for="(prePlan,planIndex) in planList" :key='planIndex'>
-                                <p>承保方案名称：<span>{{prePlan.planname}}</span><span class="no-print-show" v-if="prePlan.isprint == 0">不打印</span></p>
+                                <p>承保方案{{planIndex+1}}名称：<span>{{prePlan.planname}}</span><span class="no-print-show" v-if="prePlan.isprint == 0">不打印</span></p>
                                 <p>首次投保人数 <el-input-number size="small" v-model="prePlan.insurenumber" @change="handleChange(planIndex)" :min="0"></el-input-number></p>
                                 <p>保费小计：  {{prePlan.premium}}  人/元 ×  {{prePlan.insurenumber}}  人  = {{prePlan.planCalcFeeM | numFilterBefore()}}.<span class="fixed-two">{{prePlan.planCalcFeeM | numFilterAfter()}}</span> 元</p>
                             </div>
@@ -90,7 +89,7 @@
         </div>
         <!-- 切换报价弹框 -->
         <el-dialog title="切换报价" :visible.sync="dialogFormVisible">
-            <div>
+            <div v-if="policys.length != 0">
                 <!-- 切换报价的内容 -->
                 <div v-for="(item,index) in policys" :key="index" :label=item.proserialno 
                 :class="[item.proserialno == proserialno ?'now-policy':'',item.proserialno == waitProserialno ?'wait-now-policy':'','pre-check-policy']" 
@@ -102,11 +101,15 @@
                     <p>总保费<span>{{item.totalPremium}}元</span></p>
                 </div>
             </div>
+            <div v-else >
+                <span v-loading="policysLoading" element-loading-spinner="el-icon-loading"  
+                element-loading-text="数据加载中..."  style="width: 100%;display:block;height:100px"></span>
+            </div>
             <div slot="footer" class="dialog-footer">
                 <p class="policy-num">共{{policys.length}}个有效报价</p>
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
                 <el-button type="primary" @click="comfirmChangeCheck"
-                 vkshop-event-name="资料包换询价_更换有效报价" vkshop-event-type="click">确 定</el-button>
+                vkshop-event-name="资料包换询价_更换有效报价" vkshop-event-type="click">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -138,7 +141,7 @@ export default {
             planList:[],
             tempAllPlan:[],
             yfday:0,
-            yfmonth:1,
+            yfmonth:0,
             yfyear:0,
             pickerOptions: {
                 disabledDate(time) {
@@ -146,6 +149,7 @@ export default {
                 }
             },
             policys:[],
+            policysLoading:true
         }
     },
     created(){
@@ -166,8 +170,12 @@ export default {
                 console.log(response)
                 this.subprojectName = response.data.data.subproname;
                 this.proserialno = response.data.data.proserialno;
+                this.yfday = response.data.data.yfday;
+                this.yfmonth = response.data.data.yfmonth;
+                this.yfyear = response.data.data.yfyear;
                 this.initInformation();//初始化询价单信息
                 this.initLoading = false;
+               
             })
         },
         //切换询价
@@ -204,16 +212,18 @@ export default {
         },
         //切换报价
         changeOffer: function(){
+            this.policys = [];
+            this.dialogFormVisible = true;
             this.$axios.get('/index/getEffectiveInquiry',{
                 params:{
                     procode:localStorage.getItem('YF_mainstream_project_code'),
                     rand:new Date().getTime()
                 }
             }).then(response => {
+                this.policysLoading = false;
                 if(response.data.code == 200){//成功请求
                     if(response.data.data.length != 0){//有子项目
                         this.policys = response.data.data;
-                        this.dialogFormVisible = true;
                         console.log(this.policys);
                     }
                 }else{//请求没成功
@@ -238,6 +248,9 @@ export default {
                     console.log(response);
                     if(response.data.code == 200){//切换成功
                             this.proserialno = response.data.data.proserialno;
+                            this.yfday = response.data.data.yfday;
+                            this.yfmonth = response.data.data.yfmonth;
+                            this.yfyear = response.data.data.yfyear;
                             this.waitProserialno = null;
                             this.initInformation();
                             this.dialogFormVisible = false;
@@ -388,7 +401,7 @@ export default {
                 planCalcFee = (current.insurenum*planHbFee).toFixed(2);
                 that.premiumsum += Number(planCalcFee);
                 that.planList.push({
-                    planname:current.ptype,
+                    planname:current.planname,
                     insurenumber:current.insurenum,
                     premium:planHbFee,
                     planCalcFeeM:planCalcFee,
@@ -564,6 +577,12 @@ $fontSize-fourteen: 14px;
     &:not(:first-child){
         margin-top: 15px;
     }
+    .information-name{
+        display: block;
+        border-bottom: 2px solid #ff9968;
+        font-weight: 700;
+        font-size: 16px;
+    }
 }
 .information-content-plan{
     .information-content-plan-middle{
@@ -585,7 +604,6 @@ $fontSize-fourteen: 14px;
             
         }
         .plan-detail{
-            margin-top: 10px;
             p{
                 &:first-child{
                     span{
@@ -604,6 +622,9 @@ $fontSize-fourteen: 14px;
             margin: 0 5px;
             padding: 10px;
             border-radius: 5px;
+            &:first-child{
+                margin-top: 0;
+            }
         }
     }
     .total-premium{
@@ -753,22 +774,14 @@ $fontSize-fourteen: 14px;
     line-height: 40px;
 }
 .tip-content{
+    font-size: 12px;
     color: #999;
     padding-top: 4px;
 }
 .unit-mo{
-    font-size: 14px;
+    font-size: 12px;
     padding: 5px 2px;
-    display: flex;
-    span{
-        &:first-child{
-            width: 70px;
-        }
-        &:last-child{
-            width: 100%;
-            flex: 1;
-        }
-    }
+    
 }
 .no-print{
     background: #ededed;
@@ -881,7 +894,10 @@ $fontSize-fourteen: 14px;
             }
         }
     }
-
+    .el-message-box__content{
+        max-height: 350px;
+        overflow: scroll;
+    }
 }
 
 

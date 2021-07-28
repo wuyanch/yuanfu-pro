@@ -230,7 +230,7 @@ $fontSize-fourteen: 14px;
     }
     .el-loading-mask{
         top: 100px;
-        background-color: #ededed;
+        background-color: #f5f5f5;
     }
     .el-radio{
         margin-right: 0;

@@ -7,8 +7,8 @@
                 <!-- 基本信息 -->
                 <div class="detail-essential">
                     <p class="detail-essentail-time">创建时间：{{detailData.createtime}}</p>
-                    <p class="detail-essentail-dw"><span>投保单位：</span><span>{{detailData.subproname}}</span></p>
-                    <p class="detail-essentail-dh"><span>单号：{{detailData.policynumber}}</span></p>
+                    <p class="detail-essentail-dh"><span>投保单位：{{detailData.subproname}}</span></p>
+                    <p class="detail-essentail-dw"><span>{{detailData.policynumber}}</span><span>投保单号</span></p>
                     <p :class="[policyStatusList[status].policyStatusClass]" class="policyStatusNomal"><span>{{policyStatusList[status].policyStatusCN}}</span></p>
                 </div>
                 <!-- 企业信息 -->
@@ -76,6 +76,8 @@
                     </div>
                 </div>
             </div>
+            <!-- 到底部的提醒 -->
+            <p style="color:#999;text-align:center;padding:10px 0 5px;font-size:12Px">------------------- 已经到底部了 -------------------</p>
         </div>
         <!-- 底部按钮 -->
          <div class="footer-button">
@@ -83,7 +85,11 @@
             :class="[status == 3 ? 'go-send':'no-send']" 
             @click="sendMessage(status)" 
             vkshop-event-name="发送资料包_再次发送" 
-            vkshop-event-type="click" >再次发送</el-button>
+            vkshop-event-type="click" 
+            v-loading="storageloading" 
+            :disabled="storageloading"  
+            element-loading-spinner="el-icon-loading"  
+            element-loading-text="拼命发送中">再次发送</el-button>
         </div>
     </div>
 </template>
@@ -96,6 +102,7 @@ export default {
     data(){
         return {
             initLoading: true,//初始化加载
+            storageloading: false,//再次发送加载
             enterpriseCurName: localStorage.getItem('YF_mainstream_project'),//项目
             policyStatusList:[
                 {policyStatusCN:'未使用',policyStatusClass:'not-used'},
@@ -248,6 +255,36 @@ export default {
                 });
             }else{
                 // 发送短信
+                this.storageloading = true;
+                let prom ={
+                    policynumber: this.id,
+                    random: new Date().getTime()
+                }
+                this.$axios.post('/index/sendPolicInfo',this.$qs.stringify(prom)).then(response=>{
+                    this.storageloading = false;
+                    console.log("点击再次发送")
+                    console.log(response)
+                    if(response.data.code == 200){
+                        this.$alert('已成功发送投保资料到企业微信','成功',{
+                            type:'success',
+                            confirmButtonText:'确定',
+                            callback: action=>{}
+                        })
+                    }else{
+                        this.$alert('发送投保资料失败!'+response.data.msg +'。 请重试。','失败',{
+                            type:'error',
+                            confirmButtonText:'确定',
+                            callback: action=>{}
+                        })
+                    }
+                }).catch((error) => {
+                    this.storageloading = false;
+                    this.$alert('发送投保资料失败!'+error,'失败',{
+                        type:'error',
+                        confirmButtonText:'确定',
+                        callback: action=>{}
+                    })
+                })
             }
         },
         // 返回子项目卡
@@ -292,6 +329,7 @@ $fontSize-fourteen: 14px;
 }
 .determine-detail-content{
     background: #fff;
+    border-radius: 5px;
 }
 .detail-essential{
     position: relative;
@@ -329,7 +367,7 @@ $fontSize-fourteen: 14px;
         margin-top: -5px;
     }
     .detail-essentail-dh{
-        text-align: center;
+        text-align: left;
         margin-top: 5px;
         span{
             display: inline-block;
@@ -340,13 +378,22 @@ $fontSize-fourteen: 14px;
     }
     .detail-essentail-dw{
         text-align: center;
-        font-size: 16px;
-        margin-top: 5px;
+        font-size: 18px;
+        margin-top: 20px;
+        font-weight: 700;
+        position: relative;
         span{
-            &:first-child{
-                display: block;
-                text-align: left;
+            &:last-child{
                 font-size: 12px;
+                font-weight: 400;
+                background: red;
+                color: white;
+                padding: 2px 8px;
+                border-radius: 20px;
+                border-bottom-left-radius: 0px;
+                margin-left: 2px;
+                position: absolute;
+                bottom: 15px;
             }
         }
     }
@@ -423,7 +470,7 @@ $fontSize-fourteen: 14px;
             width: 16px;
             height: 16px;
             border-radius: 50px;
-            background: #ededed;
+            background: #f7f5f5;
         }
         &::after{
             content: '';
@@ -433,7 +480,7 @@ $fontSize-fourteen: 14px;
             width: 16px;
             height: 16px;
             border-radius: 50px;
-            background: #ededed;
+            background: #f7f5f5;
         }
     }
     
@@ -528,59 +575,52 @@ $fontSize-fourteen: 14px;
     }
 }
 .not-used{
-    padding: 15px 5px;
-    border-radius: 100px;
+    padding: 12px 10px;
+    border-radius: 200px;
     color: green;
     position: absolute;
-    // right: 20px;
-    // top: 12%;
+    top: 3%;
     right: 0;
-    top: -6%;
     transform: rotateZ(40deg);
     border: 1px dotted green;
-    font-size: 4px;
+    font-size: 16px;
     // @include font-dpr(11px);
 }
 .removed-shelves{
-    padding: 15px 5px;
-    border-radius: 100px;
+    padding: 12px 10px;
+    border-radius: 200px;
     color: rgb(182, 182, 182);
     position: absolute;
-    // right: 54px;
-    // top: 20%;
+    top: 3%;
     right: 0;
-    top: -6%;
     transform: rotateZ(40deg);
     border: 1px dotted rgb(182, 182, 182);
-    font-size: 4px;
+    font-size: 16px;
     // @include font-dpr(11px);
 }
 .sold-back{
-    padding: 15px 5px;
-    border-radius: 100px;
+    padding: 12px 10px;
+    border-radius: 200px;
     color: orange;
     position: absolute;
-    // right: 54px;
-    // top: 20%;
+    top: 3%;
     right: 0;
-    top: -6%;
     transform: rotateZ(40deg);
     border: 1px dotted orange;
-    font-size: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
     // @include font-dpr(11px);
 }
 .sold-allawy{
-    padding: 15px 5px;
-    border-radius: 100px;
+    padding: 12px 10px;
+    border-radius: 200px;
     color: #2cccd4;
     position: absolute;
-    // right: 54px;
-    // top: 20%;
+    top: 3%;
     right: 0;
-    top: -6%;
     transform: rotateZ(40deg);
     border: 1px dotted #2cccd4;
-    font-size: 4px;
+    font-size: 16px;
     // @include font-dpr(11px);
 }
 .flex-p{

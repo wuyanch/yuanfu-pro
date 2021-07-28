@@ -182,8 +182,6 @@ export default {
             console.log(arguments)
             console.log(event)
             console.log(event.target.classList.contains("active"))
-            console.log(event.path[1].children.length)
-            
             // console.log(arguments[4].path[1].childNodes,arguments[4].path[1],document.getElementsByClassName("level-btn"));
             //判断当前按钮是否已经处于选中状态
             if(event.target.classList.contains("active") == false){
@@ -820,9 +818,12 @@ export default {
                 transform: translateX(-50%);
             }
             .level-btn{
-               button:last-child{
-                    margin-right: 0;
-               }
+                button {
+                    cursor:pointer;
+                    &:last-child{
+                        margin-right: 0;
+                    }
+                }
            }
             .grade-content{
                 font-size: 12px;

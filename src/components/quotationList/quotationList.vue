@@ -63,7 +63,11 @@
                 <ul v-else-if="quotationListArray.length <= 0">
                     <li class="nodata"><img src="../../assets/img/nodata.png" v-if="isNodata == true"><i class="el-icon-loading" v-else></i><p>{{noDataTip}}</p></li>
                 </ul>
-                  <!-- 分页区 -->
+                  
+                 <!-- 到底部的提醒 -->
+                <p style="color:#999;text-align:center;padding:10px 0 5px;font-size:12Px">------------------- 已经到底部了 -------------------</p>
+                
+                <!-- 分页区 -->
                 <div class="pagination-m">
                     <el-pagination
                     background
@@ -134,7 +138,7 @@ export default {
     components:{enterpriseName},
     data(){
         return{
-            enterpriseCurName:'',
+            enterpriseCurName:localStorage.getItem('YF_mainstream_project'),
             inputContent:'',//搜索输入框
             selectContent:'',//搜索选择框
             selectTime:'',//选择的时间段
@@ -153,7 +157,6 @@ export default {
         }
     },
     created(){
-        this.enterpriseCurName = localStorage.getItem('YF_mainstream_project');
         this.initQuotation();
     },
     activated() {
@@ -177,6 +180,7 @@ export default {
             this.noDataTip = '正在拼命加载中';
             this.isNodata = false;
             this.selectContentFlag = true;
+            this.enterpriseCurName = localStorage.getItem('YF_mainstream_project');
             
             this.$axios.post('/index/getProMouldPage',{
                 procode: localStorage.getItem('YF_mainstream_project_code'),
