@@ -81,7 +81,7 @@
                                 label="②注册电话"
                                 :required="unitForm.taxmark == '0'? 'required': false"
                             >
-                                <el-input maxlength=12 type="tel" v-model="unitForm.taxphone" placeholder="请输入注册电话"></el-input>
+                                <el-input maxlength=12  v-model="unitForm.taxphone" placeholder="请输入注册电话"></el-input>
                             </el-form-item>
 
                             <el-form-item
@@ -285,22 +285,27 @@ export default {
             if(value==''||value==undefined){
                 callback(new Error('请填写证件号码'))
             }else{
-                if(this.unitForm[rule.field.slice(0,-6)+'Type'] == '0'){
+                if(this.unitForm[rule.field.slice(0,-4)+'Type'] == '0'){
                     //选择的是身份证
-                    if(this.checkCode(value)) {
-                        let date = value.substring(6,14);
-                        if(this.checkDate(date)) {
-                            if(this.checkProv(value.substring(0,2))) {
-                                callback();
+                    if(value.length <= 17){
+                        callback(new Error('身份证号码位数不正确'))
+                    }else{
+                        if(this.checkCode(value)) {
+                            let date = value.substring(6,14);
+                            if(this.checkDate(date)) {
+                                if(this.checkProv(value.substring(0,2))) {
+                                    callback();
+                                }else{
+                                    callback(new Error('身份证号码不正确'))
+                                }
                             }else{
                                 callback(new Error('身份证号码不正确'))
                             }
                         }else{
                             callback(new Error('身份证号码不正确'))
                         }
-                    }else{
-                        callback(new Error('身份证号码不正确'))
                     }
+                    
                 }else{
                     //选择的不是身份证
                      callback()
@@ -934,7 +939,7 @@ export default {
         checkCodeIfLong(){
             if(this.unitForm.agentCertificatesType == '0'){//如果证件类型是身份证，检测是否长期有效
                 if(this.unitForm.agentCertificatesCode != null){
-                    let year = this.unitForm.agentCertificatesCode.slice(7,11);
+                    let year = this.unitForm.agentCertificatesCode.slice(6,10);
                     let nowYear = (new Date()).getFullYear();
                     if((nowYear-year) < 45){
                         if(this.unitForm.agentValidityIdType=='1'){//不满46周岁但又选择了长期有效
@@ -954,7 +959,7 @@ export default {
         checklegalCodeIfLong(){
             if(this.unitForm.totalPremium == '1' && this.unitForm.legalPersonCertificatesType == '0'){//如果证件类型是身份证，检测是否长期有效
                 if(this.unitForm.legalPersonCertificatesCode != null){
-                    let year = this.unitForm.legalPersonCertificatesCode.slice(7,11);
+                    let year = this.unitForm.legalPersonCertificatesCode.slice(6,10);
                     let nowYear = (new Date()).getFullYear();
                     if((nowYear-year) < 45){
                         if(this.unitForm.legalValidityIdType=='1'){//不满46周岁但又选择了长期有效
@@ -1156,23 +1161,6 @@ export default {
     font-size: 0;
     height: 100%;
     overflow: hidden;
-    select{
-        width: 33.3%;
-        padding-left: 3px;
-        border: none;
-        font-size: 12px;
-        padding: 0;
-        padding-left: 5px;
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        background: #fff;
-        border-radius: 0;
-        &:focus { outline: none; }
-        option{
-            padding: 0px 4px 1px;
-        }
-    }
     label{
         position: relative;
         &::after{
@@ -1187,6 +1175,23 @@ export default {
             bottom: -2px;
             color: #d7d9e1;
             font-stretch: initial;
+        }
+        select{
+            width: 33.3%;
+            padding-left: 3px;
+            border: none;
+            font-size: 12px;
+            padding: 0;
+            padding-left: 5px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: #fff;
+            border-radius: 0;
+            &:focus { outline: none; }
+            option{
+                padding: 0px 4px 1px;
+            }
         }
     }
 }
@@ -1226,6 +1231,9 @@ export default {
             }
             .el-radio.is-bordered+.el-radio.is-bordered{
                 margin-left: 2px;
+            }
+            .el-radio__label{
+                padding-left: 5px;
             }
         }
         .el-radio-group.group-tra-f{

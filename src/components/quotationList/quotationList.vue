@@ -56,6 +56,8 @@
                             <button @click.stop="askAgain(item.proserialno,item.mouldcode)" vkshop-event-name="再询一次" vkshop-event-type="click">再询一次</button>
                          </div>
                      </li>
+                      <!-- 到底部的提醒 -->
+                    <p style="color:#999;text-align:center;padding:10px 0 5px;font-size:12Px">------------------- 已经到底部了 -------------------</p>
                 </ul>
                 <ul v-else-if="selectContentFlag == false">
                     <li class="nodata">等待搜索条件中...</li>
@@ -64,8 +66,7 @@
                     <li class="nodata"><img src="../../assets/img/nodata.png" v-if="isNodata == true"><i class="el-icon-loading" v-else></i><p>{{noDataTip}}</p></li>
                 </ul>
                   
-                 <!-- 到底部的提醒 -->
-                <p style="color:#999;text-align:center;padding:10px 0 5px;font-size:12Px">------------------- 已经到底部了 -------------------</p>
+                
                 
                 <!-- 分页区 -->
                 <div class="pagination-m">

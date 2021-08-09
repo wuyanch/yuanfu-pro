@@ -143,11 +143,7 @@ export default {
             yfday:0,
             yfmonth:0,
             yfyear:0,
-            pickerOptions: {
-                disabledDate(time) {
-                    return time.getTime() < Date.now() || time.getTime() > Date.now() + 60 * 24 * 3600 * 1000;
-                }
-            },
+            pickerOptions:'',
             policys:[],
             policysLoading:true
         }
@@ -156,6 +152,8 @@ export default {
         this.insurstarttime = this.convertToLateDate();
         this.subprojectid = this.$route.query != undefined ? this.$route.query.id : null;
         this.initFu();
+        this.retroactive();
+        
     },
     methods:{
         //获取之前的选择的报价
@@ -176,6 +174,22 @@ export default {
                 this.initInformation();//初始化询价单信息
                 this.initLoading = false;
                
+            })
+        },
+        // 查看保障追溯期
+        retroactive: function(){
+            let param = {
+                subprojectid: this.subprojectid,
+                random: new Date().getTime()
+            }
+            this.$axios.post('/index/queryInsurStartTime',this.$qs.stringify(param)).then(response=>{
+                console.log('查看保障追溯期');
+                console.log(response);
+                this.pickerOptions =  {
+                    disabledDate(time) {
+                        return time.getTime() <  new Date((response.data.data).replace(/-/g,'/')).getTime() || time.getTime() > Date.now() + 60 * 24 * 3600 * 1000
+                    }
+                }
             })
         },
         //切换询价
@@ -483,7 +497,9 @@ export default {
         //看当前选择的月份和之后保障期的那个月份的天数，如果选择月的天数大于保障期的天数（不是2月），那么就要以保障期那个月的天数为准
         //否则就刚刚好
         calculDate: function(){
-            let dt = new Date(this.insurstarttime),
+            let newTimeCheck = this.insurstarttime.replace(/-/g,'/');
+            console.log(newTimeCheck);
+            let dt = new Date(newTimeCheck),
                 year = dt.getFullYear(),
                 month = dt.getMonth(),
                 day = dt.getDate(),
@@ -495,18 +511,18 @@ export default {
                     if(day == nowMonD){//选择的日期等于末日
                         // return (year+1) +"-"+(month+1)>9?(month+1):"0"+(month+1)+"-"+futMonD>9?futMonD:"0"+futMonD;
                         // dateTime = new Date(new Date((year+1) +"-"+(month+1) +"-"+futMonD).getTime() - 24 * 60 * 60 * 1000 * 1);
-                        dateTime = new Date(new Date((year+1) +"-"+(month+1) +"-"+futMonD).getTime());
+                        dateTime = new Date(new Date((year+1) +"/"+(month+1) +"/"+futMonD).getTime());
                     }else{//选择的日期不是末日
                         // return (year+1) +"-"+(month+1)>9?(month+1):"0"+(month+1)+"-"+day>9?day:"0"+day;//- 24 * 60 * 60 * 1000 * 1
-                        dateTime = new Date(new Date((year+1) +"-"+(month+1) +"-"+day).getTime() );
+                        dateTime = new Date(new Date((year+1) +"/"+(month+1) +"/"+day).getTime() );
                     }
                 }else{//当前2月份日子小于明天2月份日子 28 29
                     if(day == nowMonD){//选择的日期等于末日
                         // return (year+1) +"-"+(month+1)>9?(month+1):"0"+(month+1)+"-"+futMonD>9?futMonD:"0"+futMonD;- 24 * 60 * 60 * 1000 * 1
-                        dateTime = new Date(new Date((year+1) +"-"+(month+1) +"-"+nowMonD).getTime() );
+                        dateTime = new Date(new Date((year+1) +"/"+(month+1) +"/"+nowMonD).getTime() );
                     }else{//选择的日期不是末日
                         // return (year+1) +"-"+(month+1)>9?(month+1):"0"+(month+1)+"-"+day>9?day:"0"+day;- 24 * 60 * 60 * 1000 * 1
-                        dateTime = new Date(new Date((year+1) +"-"+(month+1) +"-"+day).getTime() );
+                        dateTime = new Date(new Date((year+1) +"/"+(month+1) +"/"+day).getTime() );
                     }
                 } 
             }else if(this.yfmonth != 0 && this.yfmonth != '' && this.yfmonth != null){//如果是月
@@ -514,22 +530,23 @@ export default {
                 let futMonDM = this.mGetDate(year,month+2);//当前日子假如29天
                 if(nowMonDM > futMonDM){//当前2月份日子大于明天2月份日子29 28
                    if(day == nowMonDM){//选择的日期等于末日- 24 * 60 * 60 * 1000 * 1
-                        dateTime = new Date(new Date(year +"-"+(month+2) +"-"+futMonDM).getTime() );
+                        dateTime = new Date(new Date(year +"/"+(month+2) +"/"+futMonDM).getTime() );
                     }else{//选择的日期不是末日- 24 * 60 * 60 * 1000 * 1
-                        dateTime = new Date(new Date(year +"-"+(month+2) +"-"+day).getTime() );
+                        dateTime = new Date(new Date(year +"/"+(month+2) +"/"+day).getTime() );
                     }
                 }else{//当前2月份日子小于明天2月份日子 28 29
                     if(day == nowMonDM){//选择的日期等于末日
                         // return year +"-"+((month+2)>9?(month+2):"0"+(month+2)) +"-"+(futMonD>9?futMonD:"0"+futMonD);- 24 * 60 * 60 * 1000 * 1
-                        dateTime = new Date(new Date(year +"-"+(month+2) +"-"+futMonDM).getTime() );
+                        dateTime = new Date(new Date(year +"/"+(month+2) +"/"+futMonDM).getTime() );
                     }else{//选择的日期不是末日
                         // return year +"-"+((month+2)>9?(month+2):"0"+(month+2))+"-"+(day>9?day:"0"+day);- 24 * 60 * 60 * 1000 * 1
-                        dateTime = new Date(new Date(year +"-"+(month+2) +"-"+day).getTime() );
+                        dateTime = new Date(new Date(year +"/"+(month+2) +"/"+day).getTime() );
                     }
                 } 
             }else if(this.yfday != 0 && this.yfday != '' && this.yfday != null){//如果是天-1
-                dateTime = new Date(new Date(this.insurstarttime).getTime() + (24 * 60 * 60 * 1000 * (this.yfday)));
+                dateTime = new Date(new Date(newTimeCheck).getTime() + (24 * 60 * 60 * 1000 * (this.yfday)));
             }
+            console.log('dateTime:'+dateTime);
             y = dateTime.getFullYear();
             m = dateTime.getMonth()+1;
             d = dateTime.getDate();
