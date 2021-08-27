@@ -527,16 +527,18 @@ export default {
                     }
                 } 
             }else if(this.yfmonth != 0 && this.yfmonth != '' && this.yfmonth != null){//如果是月
-                let nowMonDM = this.mGetDate(year,month+1);//当前日子假如28天
-                let futMonDM = this.mGetDate(year,month+2);//当前日子假如29天
-                if(nowMonDM < futMonDM || nowMonDM == futMonDM){//当前2月份日子大于明天2月份日子29 28
-                   if(day == nowMonDM){//选择的日期等于末日- 24 * 60 * 60 * 1000 * 1
-                        dateTime = new Date(new Date(year +"/"+(month+2) +"/"+futMonDM).getTime() );
-                    }else{//选择的日期不是末日- 24 * 60 * 60 * 1000 * 1
-                        dateTime = new Date(new Date(year +"/"+(month+2) +"/"+day).getTime() );
-                    }
+                let nowMonDM = this.mGetDate(year,month+1);//当月日子假如28天
+                let futMonDM = this.mGetDate(year,month+2);//下月末日子
+                // 1个月的，如果是下个月有的，就直接加一个月，如果没有的话，就直接按照最后一天~
+                if(nowMonDM < futMonDM || nowMonDM == futMonDM){//下月末日子大于当前选择月份的末日子或者相等
+                    dateTime = new Date(new Date(year +"/"+(month+2) +"/"+day).getTime() );
+                //    if(day == nowMonDM){//选择的日期等于末日- 24 * 60 * 60 * 1000 * 1
+                //         dateTime = new Date(new Date(year +"/"+(month+2) +"/"+futMonDM).getTime() );
+                //     }else{//选择的日期不是末日- 24 * 60 * 60 * 1000 * 1
+                //         dateTime = new Date(new Date(year +"/"+(month+2) +"/"+day).getTime() );
+                //     }
                 }else{//当前2月份日子小于明天2月份日子 28 29
-                    if(day == nowMonDM){//选择的日期等于末日
+                    if(day > futMonDM){//选择的日期等于末日
                         // return year +"-"+((month+2)>9?(month+2):"0"+(month+2)) +"-"+(futMonD>9?futMonD:"0"+futMonD);- 24 * 60 * 60 * 1000 * 1
                         dateTime = new Date(new Date(year +"/"+(month+2) +"/"+futMonDM).getTime() );
                     }else{//选择的日期不是末日
