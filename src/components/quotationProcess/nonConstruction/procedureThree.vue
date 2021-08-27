@@ -46,20 +46,31 @@
                                                                         active-color="#6db9fe"
                                                                         inactive-color="#d4d4d4"
                                                                         v-model="contentSon.isnorm"
-                                                                        @change="isnormQ(contentSon.isnorm,index,index1,index2,indexCSon)"
+                                                                        @change="isnormQ(contentSon.isnorm,index,index1,index2,indexCSon,1)"
                                                                         :disabled="editSuccessList[index][index1][index2] ? false : 'disabled'">
                                                                     </el-switch>
                                                                     <label class="standard-span" v-if="contentSon.isnorm == false">日限额(元）：<el-input type="number" v-model.number.trim="contentSon.levelvalue"  @focus="handleFocus" @blur="handleblur"  autocomplete="off" :readonly="editSuccessList[index][index1][index2] ? false : 'readonly'"></el-input></label>
                                                                 </div>
-                                                               
+                                                              
+                                                               <div v-else-if="content.levelcode == 'Z'  && (contentSon.resp_condition == '检查费次住院限额(元)' || contentSon.resp_condition == '医疗费日限额(元)' || contentSon.resp_condition == '检查费次限额(元)')" class="exp-edit">
+                                                                    <span>是否 “无限额” </span><el-switch
+                                                                        active-color="#6db9fe"
+                                                                        inactive-color="#d4d4d4"
+                                                                        v-model="contentSon.isnorm"
+                                                                        @change="isnormQ(contentSon.isnorm,index,index1,index2,indexCSon,2)"
+                                                                        :disabled="editSuccessList[index][index1][index2] ? false : 'disabled'">
+                                                                    </el-switch>
+                                                                    <label class="standard-span" v-if="contentSon.isnorm == false">限额(元）：<el-input type="number" v-model.number.trim="contentSon.levelvalue"  @focus="handleFocus" @blur="handleblur"  autocomplete="off" :readonly="editSuccessList[index][index1][index2] ? false : 'readonly'"></el-input></label>
+                                                                </div>
+
+
                                                                 <div v-else-if="content.levelcode == 'Z'" class="self-edit">
                                                                     <el-input type="number" v-if="content.levelcode == 'Z'  && editSuccessList[index][index1][index2] == true"  @focus="handleFocus" @blur="handleblur"   v-model.trim="contentSon.levelvalue" autocomplete="off"></el-input>
-                                                                    
                                                                     <span v-else>{{contentSon.levelvalue}}</span>
                                                                 </div>
                                                             </div>
                                                         </li>
-                                                        <button class="edit-btn" v-if="content.levelcode == 'Z' && editSuccessList[index][index1][index2] == false"  @click="edit(index,index1,index2)">编辑</button><button class="edit-btn" v-if="content.levelcode == 'Z' && editSuccessList[index][index1][index2] == true" @click="editSuccess(index,index1,index2)" >完成</button>
+                                                        <li style="text-align: right;"><button class="edit-btn" v-if="content.levelcode == 'Z' && editSuccessList[index][index1][index2] == false"  @click="edit(index,index1,index2)">编辑</button><button class="edit-btn" v-if="content.levelcode == 'Z' && editSuccessList[index][index1][index2] == true" @click="editSuccess(index,index1,index2)" >完成编辑</button></li>
                                                     </ul>
                                                     
                                                 </div>
@@ -156,21 +167,22 @@ export default {
         this.getRespConByRiskCode();
     },
     methods:{
-        //是否按照社保标准
-        isnormQ: function(newValue,index,index1,index2,indexCSon){
-            // console.log("isnorm");
-            console.log(newValue);
-            console.log(index,index1,index2,indexCSon)
+        //是否按照社保标准//是否为无限额
+        isnormQ: function(newValue,index,index1,index2,indexCSon,flagSite){
             var that = this;
             this.$nextTick(()=> {
                 if(newValue == true){//旧值为false，新值为true
-                    that.$set(that.conditionsList.domains[index].data[index1].responsibilityData[index2].level[0].resp_conditionList[indexCSon],"levelvalue","-1")
+                    if(flagSite == 1){
+                        that.$set(that.conditionsList.domains[index].data[index1].responsibilityData[index2].level[0].resp_conditionList[indexCSon],"levelvalue","-1")
+                    }else{
+                        that.$set(that.conditionsList.domains[index].data[index1].responsibilityData[index2].level[0].resp_conditionList[indexCSon],"levelvalue","-2")
+                    }
+                    
                 }else{
                     that.$set(that.conditionsList.domains[index].data[index1].responsibilityData[index2].level[0].resp_conditionList[indexCSon],"levelvalue","0")
                 }
             })
-            
-            console.log(this.conditionsList.domains[index].data[index1].responsibilityData[index2].level[0].resp_conditionList[indexCSon].levelvalue)
+            // console.log(this.conditionsList.domains[index].data[index1].responsibilityData[index2].level[0].resp_conditionList[indexCSon].levelvalue)
         },
         //展开-收起
         changeBlock: function(event){
@@ -229,10 +241,15 @@ export default {
                          current.levelvalue = 0;
                     }
                 }
-                 if((current.resp_condition.indexOf('元') != -1 || current.resp_condition.indexOf('天') != -1) && current.resp_condition.indexOf('床位费') == -1){//含有元
-                    if(current.levelvalue < 0){
+                 if((current.resp_condition.indexOf('元') != -1 || current.resp_condition.indexOf('天') != -1) ){//含有元、天
+                    if(current.resp_condition.indexOf('限额') != -1 && !current.isnorm){
+                        if((current.levelvalue != -1 || current.levelvalue != -2 ) && current.levelvalue < 0){
+                            current.levelvalue = 0;
+                        }
+                    }else if(current.levelvalue < 0 && !current.isnorm){
                          current.levelvalue = 0;
                     }
+                   
                 }
                 
             })
@@ -761,9 +778,9 @@ export default {
             margin-top: 0;
         }
         button.edit-btn{
-            position: absolute;
+            position: relative;
             right: 0;
-            top: 0;
+            bottom: 0;
             color: #f8b95b;
             border: 1px solid #f8b95b;
             height: 25px;
@@ -846,7 +863,7 @@ export default {
                     }
                     .exp-edit{
                         display: inline-block;
-                        width: 180px;
+                        width: 160px;
                         label.standard-span{
                             display: block;
                             margin-top: 10px;

@@ -122,11 +122,10 @@
                                                     <div v-if="itemSub.subIfDefaultConfiguration == true">
                                                         <p v-if="itemSub.level != null" class="kind-explain-1 desc desc-sub">
                                                             <span v-for="(itemSubL,index5) in itemSub.level[0].resp_conditionList" :key="index5">
-                                                               <span v-if="itemSubL.resp_condition == '床位费日限额(元)'">
-                                                                  <span v-if="itemSubL.levelvalue == -1 ">{{itemSubL.resp_condition}}：按照社保标准；</span> 
-                                                                  <span v-else>{{itemSubL.resp_condition}}(不按照社保标准)：{{itemSubL.levelvalue}}；</span> 
-                                                                  <!-- <span v-if="itemSubL.levelvalue > 0 && itemSub.level[0].levelcode=='L'">{{itemSubL.resp_condition}}(不按照社保标准)：{{itemSubL.levelvalue}}；</span> 
-                                                                  <span v-else>{{itemSubL.resp_condition}}：按照社保标准；</span>  -->
+                                                               <span v-if="itemSubL.resp_condition.indexOf('限额') != -1">
+                                                                   <!-- 含有限额 -->
+                                                                  <span v-if="itemSubL.levelvalue == -1 || itemSubL.levelvalue == -2">{{itemSubL.resp_condition}}：{{itemSubL.levelvalue == -1?'按照社保标准':'无限额'}}；</span> 
+                                                                  <span v-else>{{itemSubL.resp_condition}}({{itemSubL.resp_condition.indexOf('床位费') != -1?'不按照社保标准':'限额'}})：{{itemSubL.levelvalue}}；</span> 
                                                                 </span> 
                                                                 <span v-else>{{itemSubL.resp_condition}}：{{itemSubL.levelvalue}}；</span> 
                                                             </span>

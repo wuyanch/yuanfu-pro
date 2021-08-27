@@ -199,8 +199,7 @@
                                                                 <div class="kind-explain-1 kind-explain-2 desc" v-if="item42.confList != null">
                                                                     <p  v-for="(item42_sub,index42_sub) in item42.confList" :key="index42_sub">
                                                                     <span>{{item42_sub.levelname}}：</span>
-                                                                        <span><span v-if="item42_sub.levelvalue < 0">按照社保标准</span><span v-else>{{item42_sub.levelvalue}}</span>
-                                                                        </span>
+                                                                        <span><span v-if="item42_sub.levelvalue < 0">{{item42_sub.levelvalue == -1?'按照社保标准':'无限额'}}</span><span v-else>{{item42_sub.levelvalue}}</span></span>
                                                                     </p>
                                                                 </div>
                                                             </div>
@@ -295,14 +294,13 @@
                                                                 <div class="kind-explain-1 kind-explain-2 desc" v-if="item42.confList != null">
                                                                     <p  v-for="(item42_sub,index42_sub) in item42.confList" :key="index42_sub">
                                                                     <span>{{item42_sub.levelname}}：</span>
-                                                                        <span v-if="item42_sub.hbvalue != null"><i class="after-hbchange" v-if="item42_sub.hbvalue < 0">按照社保标准</i><i v-else class="after-hbchange">{{item42_sub.hbvalue}}</i>
+                                                                        <span v-if="item42_sub.hbvalue != null"><i class="after-hbchange" v-if="item42_sub.hbvalue < 0">{{item42_sub.levelvalue == -1?'按照社保标准':'无限额'}}</i><i v-else class="after-hbchange">{{item42_sub.hbvalue}}</i>
                                                                             <el-tooltip placement="top" class="item" effect="dark" v-if="item42_sub.hbvalue != item42_sub.levelvalue">
                                                                                 <div slot="content">申请设置条件为：{{item42_sub.levelvalue}}</div>
                                                                                 <el-button class="hbchange"><i class="el-icon-warning-outline"></i>该数值核保有改动</el-button>
                                                                             </el-tooltip>
                                                                         </span>
-                                                                        <span v-else><span v-if="item42_sub.levelvalue < 0">按照社保标准</span><span v-else>{{item42_sub.levelvalue}}</span>
-                                                                        </span>
+                                                                        <span v-else><span v-if="item42_sub.levelvalue < 0">{{item42_sub.levelvalue == -1?'按照社保标准':'无限额'}}</span><span v-else>{{item42_sub.levelvalue}}</span></span>
                                                                     </p>
                                                                 </div>
                                                             </div>

@@ -46,6 +46,7 @@
                             format="yyyy - MM - dd "
                             value-format="yyyy-MM-dd"
                             :picker-options="pickerOptions"
+                            :editable="false"
                             default-value
                             >
                             </el-date-picker></p>
@@ -507,7 +508,7 @@ export default {
             if(this.yfyear != 0 && this.yfyear != '' && this.yfyear != null){//如果是年4对应-5月 1对应2月
                 let nowMonD = this.mGetDate(year,month+1);//当前日子假如28天
                 let futMonD = this.mGetDate(year+1,month+1);//当前日子假如29天
-                if(nowMonD > futMonD){//当前2月份日子大于明天2月份日子29 28
+                if(nowMonD < futMonD || nowMonD == futMonD){//当前2月份日子大于明天2月份日子29 28
                     if(day == nowMonD){//选择的日期等于末日
                         // return (year+1) +"-"+(month+1)>9?(month+1):"0"+(month+1)+"-"+futMonD>9?futMonD:"0"+futMonD;
                         // dateTime = new Date(new Date((year+1) +"-"+(month+1) +"-"+futMonD).getTime() - 24 * 60 * 60 * 1000 * 1);
@@ -528,7 +529,7 @@ export default {
             }else if(this.yfmonth != 0 && this.yfmonth != '' && this.yfmonth != null){//如果是月
                 let nowMonDM = this.mGetDate(year,month+1);//当前日子假如28天
                 let futMonDM = this.mGetDate(year,month+2);//当前日子假如29天
-                if(nowMonDM > futMonDM){//当前2月份日子大于明天2月份日子29 28
+                if(nowMonDM < futMonDM || nowMonDM == futMonDM){//当前2月份日子大于明天2月份日子29 28
                    if(day == nowMonDM){//选择的日期等于末日- 24 * 60 * 60 * 1000 * 1
                         dateTime = new Date(new Date(year +"/"+(month+2) +"/"+futMonDM).getTime() );
                     }else{//选择的日期不是末日- 24 * 60 * 60 * 1000 * 1
@@ -547,13 +548,13 @@ export default {
                 dateTime = new Date(new Date(newTimeCheck).getTime() + (24 * 60 * 60 * 1000 * (this.yfday)));
             }
             console.log('dateTime:'+dateTime);
-            y = dateTime.getFullYear();
-            m = dateTime.getMonth()+1;
-            d = dateTime.getDate();
-            let bz = new Date(new Date(dateTime).getTime() + 24 * 60 * 60 * 1000 *1);
             yyyy = dateTime.getFullYear();
             mm = dateTime.getMonth()+1;
             dd = dateTime.getDate();
+            let bz = new Date(new Date(dateTime).getTime() - 24 * 60 * 60 * 1000 *1);
+            y = bz.getFullYear();
+            m = bz.getMonth()+1;
+            d = bz.getDate();
             this.insurendtime = yyyy +'-'+ (mm>9?mm:"0"+mm) +'-'+ (Number(dd)>9?Number(dd):"0"+Number(dd)) ;
             return (y +'-'+ (m>9?m:"0"+m) +'-'+ (d>9?d:"0"+d));
         }
