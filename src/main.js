@@ -79,7 +79,7 @@ axios.interceptors.response.use(
       if(response.headers.hasOwnProperty("authorization")){
         localStorage.setItem('token',response.headers.authorization);
       }
-      Message.close;//关闭弹窗
+      messageOnce.close();//关闭弹窗
       return Promise.resolve(response);
     } else {
       return Promise.reject(response);
@@ -124,8 +124,12 @@ axios.interceptors.response.use(
           });
 
         default:
-          // vant.Toast.fail(error.response.data.message);
-          // router.push({name:'overLogin'})
+          messageOnce.error({
+            showClose: true,
+            message: 'token已过期，请返回重进',
+            type: 'error',
+            duration:0
+          });
       }
       return Promise.reject(error.response);
     }

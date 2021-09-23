@@ -12,14 +12,14 @@
             <el-divider class="divider-f"></el-divider>
 
             <div class="finish-success-tip">
-                <p class="tip-content">投保资料包已成功发送至您的企业微信！</p>
+                <p class="tip-content">投保资料包将发送至您的企业微信！请注意查收</p>
                 <div class="follow-process">
                     <p class="follow-process-tip">后续流程如下：</p>
                     <p>1、查收资料：企业微信-匠心管家消息。</p>
                     <p>2、核对盖章：核对无误后请投保单位盖章确认。</p>
                     <p>3、承保受理：盖章后请交回至运营承保岗受理（本部-叶晓欣，机构-综合内勤）。</p>
                 </div>
-                <p>温馨提示：本单投保资料请于XXXX-XX-XX二十四时前收齐并交回至运营或机构内勤。</p>
+                <p>温馨提示：本单投保资料请于{{returnTime}}二十四时前收齐并交回至运营或机构内勤。</p>
             </div>
 
             <div class="footer-button" >
@@ -38,17 +38,26 @@ export default {
     data(){
         return{
             enterpriseCurName: localStorage.getItem('YF_mainstream_project'),//项目
-            status:null,
+            creatTime: null,
         }
     },
     created(){
-        this.status = this.$route.query.status;
+        this.creatTime = this.$route.params.creatTime
     },
     methods:{
         //返回子项目卡
         waiverModification: function () {
            this.$router.push({path:'/effectIndex'})
         },
+    },
+    computed: {
+        returnTime () {
+            console.log(this.creatTime)
+            let time = new Date(new Date(this.creatTime).getTime() + 60*24*60*60*1000);
+            const lastTime = time.getFullYear() + '-' + Number( time.getMonth() + 1 > 9? time.getMonth()+1:'0'+ time.getMonth()+1 )+ '-' + time.getDate()
+            return lastTime
+
+        }
     }
 }
 </script>

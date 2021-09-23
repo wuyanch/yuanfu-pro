@@ -17,7 +17,9 @@
                     <!-- 报价具体内容 -->
                     <div class="information-content-plan-middle">
                         <div class="plan-top-inquiry">
-                            <p class="plan-middle-inquiryNo"><el-button @click="lookDetail(proserialno)">询价号：{{proserialno}} <i class="el-icon-arrow-right"></i></el-button> </p>
+                            <p class="plan-middle-inquiryNo"><el-button @click="lookDetail(proserialno)">询价号：{{proserialno}} <i class="el-icon-arrow-right"></i></el-button> 
+                            <el-button @click="textCopy(proserialno,$event)" class="el-icon-c-scale-to-original copy-style">复制询价号</el-button>
+                            </p>
                             <p>提交时间：{{createtime | filterTime()}}</p>
                             <p>报价有效期：{{loseefficacytime | filterTime()}} </p>
                         </div>
@@ -117,6 +119,7 @@
 </template>
 
 <script>
+import copyText from '@/js/clipboard'
 import enterpriseName from '../quotationProcess/processEnterpriseName.vue'
 export default {
     name:'determineInformation',
@@ -461,7 +464,7 @@ export default {
                 console.log(response)
                 
                 if(response.data.code == 200){
-                    that.$router.push({path:'/determineFinish'})
+                    this.$router.push({name:'determineFinish',params:{creatTime:new Date(response.data.data)}})
                 }else{
                     that.$alert('生成投保资料失败!'+response.data.msg,'失败',{
                         type:'error',
@@ -559,6 +562,10 @@ export default {
             d = bz.getDate();
             this.insurendtime = yyyy +'-'+ (mm>9?mm:"0"+mm) +'-'+ (Number(dd)>9?Number(dd):"0"+Number(dd)) ;
             return (y +'-'+ (m>9?m:"0"+m) +'-'+ (d>9?d:"0"+d));
+        },
+        // 复制询价单号到粘贴板
+        textCopy(text,event) {
+            copyText(text,event,'询价号复制成功')
         }
 
     },
@@ -608,9 +615,20 @@ $fontSize-fourteen: 14px;
     .information-content-plan-middle{
         .plan-top-inquiry{
             padding: 10px 15px;
+            position: relative;
         }
         p{
             padding: 2px 0;
+            position: relative;
+            .el-button.copy-style {
+                font-weight: 400;
+                font-size: 12px;
+                color: #65b5fc;
+                position: absolute;
+                right: -14px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
         }
         .plan-middle-inquiryNo{
             .el-button{

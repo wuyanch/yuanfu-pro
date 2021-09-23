@@ -7,7 +7,7 @@
         <div class="finish-page finish-page-content">
             <div class="finish-success-top">
                 <i class="el-icon-check"></i>
-                <p>成功</p>
+                <p>{{tipSuccess}}</p>
             </div>
             <el-divider class="divider-f"></el-divider>
             <div class="finish-success-tip" v-if="(status == 3 || status == 4) && repair == 0">
@@ -44,15 +44,25 @@ export default {
             enterpriseCurName: localStorage.getItem('YF_mainstream_project'),//项目
             status:null,
             repair:null,
-            projectId:''
+            projectId:'',
+            tipSuccess:''
         }
     },
     created(){
-        this.status = this.$route.query.status;
-        this.projectId = this.$route.query.id;
-        this.repair = this.$route.query.repair;
+        this.finishF()
     },
     methods:{
+        // 提示语初始化
+        finishF () {
+            this.status = this.$route.query.status;
+            this.projectId = this.$route.query.id;
+            this.repair = this.$route.query.repair;
+            if(this.status == 1){
+                this.tipSuccess = '提交成功'
+            } else {
+                this.tipSuccess = '成功'
+            }
+        },
         //取消修改或者取消填写
         waiverModification: function () {
            this.$router.push({path:'/effectIndex'})

@@ -156,6 +156,7 @@
 </template>
 
 <script>
+import baseURL from '@/js/base.js';
 export default {
     name:'procedurePreview',
     data(){
@@ -190,7 +191,10 @@ export default {
         // 取图片列表--得到图片
         getListPhoto: function(){
             let _that = this;
-            this.$axios.get('/index/list/image',{
+            console.log('取图片列表环境URL')
+            console.log(process.env.NODE_ENV==='production'?baseURL.production:baseURL.test)
+            const imgBaseURL = process.env.NODE_ENV ==='production'?baseURL.production:baseURL.test;
+            this.$axios.get('/index/list/images',{
                     params:{
                         proserialno:localStorage.getItem('YF_quotationInformation_proserialno'),
                         rand:new Date().getTime()
@@ -207,8 +211,11 @@ export default {
                              res.data.data.forEach(function(current,index){
                             // that.$set(current,"status",'success');//改变状态位
                                 current.status = 'success';
+                                current.url = imgBaseURL+current.viewurl;
                             })
                             _that.picList = res.data.data;
+                            console.log("打印出新的图片链接")
+                            console.log(_that.picList)
                             _that.getPhotoList();
                         }
                     }else{

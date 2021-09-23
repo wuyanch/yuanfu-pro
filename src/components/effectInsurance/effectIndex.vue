@@ -35,7 +35,7 @@
                                                 <div class="policy-detail-left">
                                                     <p><span>投保单号：</span><span>{{item.policynumber}}</span></p>
                                                     <p><span>创建时间：</span><span>{{item.createtime}}</span></p>
-                                                    <p><span>生效时间：</span><span>{{item.insurstarttime}} 0时</span></p>
+                                                    <p><span>生效时间：</span><span>{{item.insurstarttime}}</span></p>
                                                     <p><span>保险期间：</span><span>{{item.riskPeriod}}</span></p>
                                                 </div><p class="policy-detail-arrow"><i class="el-icon-arrow-right"></i></p>
                                                 <!-- 0-未使用, 1-已下架, 2-已过期, 3-待回销, 4-已回销 -->
@@ -81,7 +81,8 @@ export default {
                 {policyStatusCN:'待回销',policyStatusClass:'sold-back'},
                 {policyStatusCN:'已回销',policyStatusClass:'sold-allawy'}
             ],
-            companyList:[]
+            companyList:[],
+            YF_project_number: 0
         }
     },
     created(){
@@ -104,6 +105,7 @@ export default {
                 if(response.data.code == 200){//成功请求
                     if(response.data.data.total.length != 0){//有子项目
                         that.companyList = response.data.data.items;
+                        this.YF_project_number = response.data.data.items.length;
                     }
                 }else{//请求没成功
                     that.$alert('请求遇到问题了，麻烦联系信息技术部','提示',{
@@ -125,6 +127,7 @@ export default {
         },
         //创建投保单位
         creatUnit: function(){
+            localStorage.setItem("YF_project_number",JSON.stringify(this.YF_project_number));
             this.$router.push({path:'/applicationStepOne'})
         },
         //去完善-企业信息

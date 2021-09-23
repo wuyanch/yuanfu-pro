@@ -6,7 +6,7 @@
             <p class="decorate">请确认项目信息</p>
             <p class="information-ind"><span><i class="xing">*</i>行业</span><el-button type="text" @click="centerDialogVisible = true"><span v-if="hasInde" class="placeHolder">请选择行业</span><span v-else >{{selectIndustry}}</span><i class="el-icon-arrow-down"></i> </el-button></p>
             <p class="information-num" ><span><i class="xing">*</i>单位人数</span><el-input v-model.number="totalNum" placeholder="请填写单位人数"></el-input></p>
-            <p class="information-remark"><span>我的备注</span>
+            <p class="information-remark"><span class="remark-bz">我的备注</span><span class="remark-note">说明：“我的备注”仅您自己可见。如需给核保人员看，请写在“补充信息”处。（“补充信息”在后面的页面）</span>
                 <el-input
                 type="textarea"
                 resize="none"
@@ -179,6 +179,15 @@ export default {
         width: 68px;
         display: inline-block;
     }
+    .remark-bz {
+        height: 20px;
+    }
+    .remark-note{
+        font-size: 12px;
+        color: red;
+        line-height: 16px;
+        margin-bottom: 0;
+    }
     .el-input,.el-button{
         width: 240px;
         text-align: left;
@@ -198,10 +207,9 @@ export default {
 }
 .information-remark{
     padding: 10px;
-    height: 250px;
+    min-height: 300px;
     span{
         display: inline-block;
-        margin-bottom: 10px;
     }
 }
  .button-btn{

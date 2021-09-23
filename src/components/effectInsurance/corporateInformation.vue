@@ -112,11 +112,17 @@
                     <p class="unit-part-title">03 经办人信息</p>
                     <span class="tip tip-f">请务必核对准确经办人手机号，后续流程需接收短信验证码</span>
                     <el-form-item
+                            prop="agentDepart"
+                            label="所在部门"
+                        >
+                            <el-input  v-model="unitForm.agentDepart" placeholder="请输入经办人所在部门"></el-input>
+                    </el-form-item>
+                    <el-form-item
                             prop="agentPhone"
                             label="手机号"
                         >
                             <el-input maxlength=11 type="tel" v-model="unitForm.agentPhone" placeholder="请输入经办人手机号"></el-input>
-                        </el-form-item>
+                    </el-form-item>
                     <el-form-item
                             prop="agentName"
                             label="姓名"
@@ -310,10 +316,7 @@ export default {
                     //选择的不是身份证
                      callback()
                 }
-                
-                
             }
-            
         };
         let accountBankNumberBT=(rule,value,callback)=>{
              if(value==''||value==undefined){
@@ -461,6 +464,7 @@ export default {
                 agentPhone:null,//经办人手机号
                 agentName:null,//经办人名字
                 agentSex: null,//经办人性别
+                agentDepart: null,//经办人所在部门
                 totalPremium:'1',//总保费是否超过20万
                 legalPersonCertificatesValidity:null,//负责人证件号码有效期
                 legalPersonCertificatesCode:null,//负责人证件号码
@@ -522,6 +526,9 @@ export default {
                     { required: true, message: '请填写经办人姓名', trigger: 'blur' },
                     { pattern:/^[A-Za-z\u4e00-\u9fa5-\u2E80-\uFE4F|.|·]+$/,message: '填写的姓名不符合规则',trigger:'change'}
                 ],
+                agentDepart: [
+                    { required: true, message: '请输入经办人所在部门', trigger: 'blur' }
+                ],
                 legalPersonCertificatesValidity: [
                     { required: true, message: '请选择证件有效期', trigger: 'blur' }
                 ],
@@ -559,6 +566,9 @@ export default {
         this.getDictItemsA();//获取行业类别
         this.initGetSubpro();//初始化获取单位信息
         this.getsubpro();//获取有效报价
+        if(this.status == null && localStorage.getItem('YF_project_number') == 0){
+            this.unitForm.subproname = localStorage.getItem('YF_mainstream_project') // 子项目等于项目名称
+        }
     },
     methods:{
         //获取用户所在地/index/queryUserLoginInfo
@@ -653,6 +663,8 @@ export default {
                         console.log(response.data.data)
                     }
                     this.unitForm = response.data.data;
+                    console.log("初始化unitForm")
+                    console.log(this.unitForm)
                     this.initLoading = !this.initLoading
                 })
             }else{
@@ -663,7 +675,6 @@ export default {
         submitForm(formName) {
             let that = this, tipContent ='';
             this.$refs[formName].validate((valid) => {
-                console.log(this.unitForm);
                 if (valid) {
                     if(!this.checkCodeIfLong()){
                         this.$alert('经办人不满46周岁,身份证证件有效期不符合长期有效，请核对身份证件有效期');
@@ -707,7 +718,10 @@ export default {
                             console.log('测试对象合并')
                             console.log(that.unitForm)
                         }
-                        console.log('提交数据'+this.unitForm)
+                        if( this.unitId !== null){
+                            this.unitForm.id = this.unitId;
+                        }
+                        console.log('提交数据',this.unitForm)
                         that.$axios.post('/index/saveSubpro',that.unitForm,{timeout:3000}).then(response=>{
                             console.log(response);  
                             if(response.data.code == 200){
@@ -762,12 +776,20 @@ export default {
                     console.log('测试对象合并')
                     console.log(this.unitForm)
                 }
+                if(this.unitId !== null){
+                    this.unitForm.id = this.unitId;
+                }
+                console.log("暂存id")
+                console.log(this.unitId)
                 this.storageloading = true;
                 this.$axios.post('/index/tempSaveSubpro',this.unitForm,{
                     'Content-Type':'application/json'
                 }).then(response=>{
-                    console.log('暂存数据'+response);  
-                    if(response.data.code == 200){   
+                    console.log('暂存数据');  
+                    console.log(response);  
+                    if(response.data.code == 200){ 
+                        this.unitId = response.data.data.id;
+                        this.status = response.data.data.status;
                         this.$message({
                             message: '恭喜你，暂存成功',
                             type: 'success'
@@ -870,6 +892,7 @@ export default {
         },
         //暂存或者审核不通过时，修改名字的弹框
         toPopup: function(){
+            console.log('这')
             let that = this;
             const h = this.$createElement;
             this.$msgbox({
@@ -885,6 +908,8 @@ export default {
             confirmButtonText: '确认修改',
             cancelButtonText: '放弃修改',
             inputErrorMessage: '',
+            inputType: 'textarea',
+            inputValue: that.unitForm.subproname,
             beforeClose: (action, instance, done) => {
                 if (action === 'confirm') {
                     instance.confirmButtonLoading = true;
@@ -914,10 +939,24 @@ export default {
                                 instance.confirmButtonLoading = false;
                                 instance.confirmButtonText = '确认修改';
                             }else{
-                                this.$alert(resp.data.msg)
+                                done();
+                                // this.$alert(resp.data.msg)
+                                this.$message({
+                                    message: resp.data.msg,
+                                    type: 'error'
+                                });
                                 instance.confirmButtonLoading = false;
                                 instance.confirmButtonText = '确认修改';
                             }
+                        }).catch(()=>{
+                            done();
+                            // this.$alert(resp.data.msg)
+                            this.$message({
+                                message: resp.data.msg,
+                                type: 'error'
+                            });
+                            instance.confirmButtonLoading = false;
+                            instance.confirmButtonText = '确认修改';
                         })
                     }
                     
@@ -928,10 +967,8 @@ export default {
                 }
             }
             }).then(action => {
-                done();
-                instance.confirmButtonLoading = false;
-                instance.confirmButtonText = '确认修改';
-            }).catch(()=>{
+                
+            }).catch(error => {
                 
             })
         },
@@ -1316,7 +1353,11 @@ export default {
         }
     }
 }
-
+.el-message-box {
+    .el-textarea__inner {
+        resize: none;
+    }
+}
 
 
 </style>

@@ -283,7 +283,7 @@
                                                                 <p class="kind-title-1 kind-explain-1"><span>{{item42.respshort}}：</span>
                                                                     <span v-if="item42.hbinsureamount != null"><i class="after-hbchange"><span class="mony"><span class="mony-before">{{item42.hbinsureamount | numFilterBefore}}</span>.<span class="mony-after">{{item42.hbinsureamount | numFilterAfter}}</span></span> {{item42.amountunit}}</i>
                                                                         <el-tooltip placement="top" class="item" effect="dark" v-if="item42.hbinsureamount != item42.insureamount">
-                                                                            <div slot="content">申请设置条件为：{{item42.insureamount}}</div>
+                                                                            <div slot="content">申请设置条件为：{{item42.insureamount >= 0 ? item42.insureamount : (item42.insureamount == -1?'按照社保标准':'无限额') }}</div>
                                                                             <el-button class="hbchange"><i class="el-icon-warning-outline"></i>该数值核保有改动</el-button>
                                                                         </el-tooltip>
                                                                     </span>
@@ -294,9 +294,9 @@
                                                                 <div class="kind-explain-1 kind-explain-2 desc" v-if="item42.confList != null">
                                                                     <p  v-for="(item42_sub,index42_sub) in item42.confList" :key="index42_sub">
                                                                     <span>{{item42_sub.levelname}}：</span>
-                                                                        <span v-if="item42_sub.hbvalue != null"><i class="after-hbchange" v-if="item42_sub.hbvalue < 0">{{item42_sub.levelvalue == -1?'按照社保标准':'无限额'}}</i><i v-else class="after-hbchange">{{item42_sub.hbvalue}}</i>
+                                                                        <span v-if="item42_sub.hbvalue != null"><i class="after-hbchange" v-if="item42_sub.hbvalue < 0">{{item42_sub.hbvalue == -1?'按照社保标准':'无限额'}}</i><i v-else class="after-hbchange">{{item42_sub.hbvalue}}</i>
                                                                             <el-tooltip placement="top" class="item" effect="dark" v-if="item42_sub.hbvalue != item42_sub.levelvalue">
-                                                                                <div slot="content">申请设置条件为：{{item42_sub.levelvalue}}</div>
+                                                                                <div slot="content">申请设置条件为：{{item42_sub.levelvalue >= 0 ? item42_sub.levelvalue : (item42_sub.levelvalue == -1?'按照社保标准':'无限额') }}</div>
                                                                                 <el-button class="hbchange"><i class="el-icon-warning-outline"></i>该数值核保有改动</el-button>
                                                                             </el-tooltip>
                                                                         </span>
@@ -343,6 +343,7 @@
 <script>
 import { nextTick } from 'process';
 import enterpriseName from '../quotationProcess/processEnterpriseName.vue'
+import baseURL from '@/js/base.js'
 export default {
     name:'quotationDetail',
     components:{enterpriseName},
@@ -385,7 +386,10 @@ export default {
         },
          // 取图片列表--得到图片
         getListPhoto: function(){
-            this.$axios.get('/index/list/image',{
+            console.log('取图片列表环境URL')
+            console.log(process.env.NODE_ENV==='production'?baseURL.production:baseURL.test)
+            const imgBaseURL = process.env.NODE_ENV ==='production'?baseURL.production:baseURL.test;
+            this.$axios.get('/index/list/images',{
                     params:{
                         proserialno: this.currentId,
                         rand:new Date().getTime()
@@ -402,8 +406,11 @@ export default {
                              res.data.data.forEach(function(current,index){
                             // that.$set(current,"status",'success');//改变状态位
                                 current.status = 'success';
+                                current.url = imgBaseURL+current.viewurl;
                             })
                             this.picList = res.data.data;
+                            console.log("打印出新的图片链接")
+                            console.log(this.picList)
                             this.getPhotoList();
                         }
                     }else{

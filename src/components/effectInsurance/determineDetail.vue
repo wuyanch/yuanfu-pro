@@ -6,10 +6,13 @@
             <div v-show="!initLoading" class="determine-detail-content">
                 <!-- 基本信息 -->
                 <div class="detail-essential">
-                    <p class="detail-essentail-time">创建时间：{{detailData.createtime}}</p>
+                    <div class="copy-flex">
+                        <p class="detail-essentail-time">创建时间：{{detailData.createtime}}</p>
+                        <p :class="[policyStatusList[status].policyStatusClass,'policyStatusNomal']"><span>{{policyStatusList[status].policyStatusCN}}</span></p>
+                        <el-button  @click="textCopy(detailData.policynumber,$event)" class="el-icon-c-scale-to-original copy-style">复制投保单号</el-button>
+                    </div>
                     <p class="detail-essentail-dh"><span>投保单位：{{detailData.subproname}}</span></p>
                     <p class="detail-essentail-dw"><span>{{detailData.policynumber}}</span><span>投保单号</span></p>
-                    <p :class="[policyStatusList[status].policyStatusClass]" class="policyStatusNomal"><span>{{policyStatusList[status].policyStatusCN}}</span></p>
                 </div>
                 <!-- 企业信息 -->
                 <div class="detail-part">
@@ -29,6 +32,7 @@
                     </div>
                     <div class="detail-part-content">
                         <p class="part-content-title part-content-title-small" data-order="02"><span>经办人信息</span></p>
+                        <p class="flex-p"><span>所在部门：</span>{{detailData.agentDepart}}</p>
                         <p class="flex-p"><span>手机号：</span>{{detailData.agentPhone}}</p>
                         <p class="flex-p"><span>姓名：</span>{{detailData.agentName}}  （{{detailData.agentSex == 0?'女士':'先生'}}）</p>
                         <p class="flex-p"><span>证件类型：</span>{{detailData.agentCertificatesType | filterText(cidType)}}</p>
@@ -77,7 +81,7 @@
                 </div>
             </div>
             <!-- 到底部的提醒 -->
-            <p style="color:#999;text-align:center;padding:10px 0 5px;font-size:12Px">------------------- 已经到底部了 -------------------</p>
+            <p v-show="!initLoading" style="color:#999;text-align:center;padding:10px 0 5px;font-size:12Px">------------------- 已经到底部了 -------------------</p>
         </div>
         <!-- 底部按钮 -->
          <div class="footer-button">
@@ -95,6 +99,7 @@
 </template>
 
 <script>
+import copyText from '@/js/clipboard'
 import enterpriseName from '../quotationProcess/processEnterpriseName.vue'
 export default {
     name:'determineDetail',
@@ -247,7 +252,7 @@ export default {
         // 发送信息
         sendMessage: function(status){
             if(status != 3){
-                let html = '投保单已XXX(取投保单状态，例如”已过期“)，不能再次发送。如需投保单，请重新创建一份新的投保单。'
+                let html = '投保单已过期，不能再次发送。如需投保单，请重新创建一份新的投保单。'
                 this.$alert(html, '温馨提示', {
                     confirmButtonText: '确定',
                     dangerouslyUseHTMLString: true,
@@ -265,11 +270,12 @@ export default {
                     console.log("点击再次发送")
                     console.log(response)
                     if(response.data.code == 200){
-                        this.$alert('已成功发送投保资料到企业微信','成功',{
-                            type:'success',
-                            confirmButtonText:'确定',
-                            callback: action=>{}
-                        })
+                        // this.$alert('已成功发送投保资料到企业微信','成功',{
+                        //     type:'success',
+                        //     confirmButtonText:'确定',
+                        //     callback: action=>{}
+                        // })
+                        this.$router.push({name:'determineFinish',params:{creatTime:new Date(response.data.data)}})
                     }else{
                         this.$alert('发送投保资料失败!'+response.data.msg +'。 请重试。','失败',{
                             type:'error',
@@ -302,6 +308,10 @@ export default {
             let m = 2,money = 0;
             money = Number((permony)*100) * Number(people) / Math.pow(10, m);
             return (money.toFixed(2).split('.'))[1]
+        },
+        // 复制文本
+        textCopy(text,event) {
+            copyText(text,event,'投保单号复制成功')
         }
     },
     filters:{
@@ -337,30 +347,6 @@ $fontSize-fourteen: 14px;
     border-radius: 5px;
     padding: 15px 10px;
     font-size: $fontSize-thirteen;
-    // &::before{
-    //     content: '';
-    //     position: absolute;
-    //     left: 0;
-    //     bottom: 2px;
-    //     width: 10px;
-    //     height: 65px;
-    //     border-top: 6px solid transparent;
-    //     border-left: 5px solid #FF925D;
-    //     border-right: 10px solid transparent;
-    //     border-bottom: 6px solid transparent;
-    // }
-    // &::after{
-    //     content: '';
-    //     position: absolute;
-    //     right: 0;
-    //     bottom: 2px;
-    //     width: 10px;
-    //     height: 65px;
-    //     border-top: 6px solid transparent;
-    //     border-left: 10px solid transparent;
-    //     border-right: 5px solid #FF925D;
-    //     border-bottom: 6px solid transparent;
-    // }
     .detail-essentail-time{
         font-size: 12px;
         color: #c5c4c4;
@@ -396,6 +382,19 @@ $fontSize-fourteen: 14px;
                 bottom: 15px;
             }
         }
+    }
+    .copy-flex {
+        display: inline-flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+    .copy-style {
+        border: none;
+        color: #6199f8;
+        padding: 2px 2px 2px 20px;
+        background: inherit;
+        flex-grow: 2;
     }
 }
 .detail-part{
@@ -575,52 +574,68 @@ $fontSize-fourteen: 14px;
     }
 }
 .not-used{
-    padding: 12px 10px;
-    border-radius: 200px;
     color: green;
-    position: absolute;
-    top: 3%;
-    right: 0;
-    transform: rotateZ(40deg);
     border: 1px dotted green;
-    font-size: 16px;
-    // @include font-dpr(11px);
+    box-sizing: border-box;
+    display: inline-block;
+    border-radius: 5px;
+    padding: 3px 5px;
+    line-height: 1;
+    font-size: 12px;
+    margin-left: 5px;
 }
 .removed-shelves{
-    padding: 12px 10px;
-    border-radius: 200px;
-    color: rgb(182, 182, 182);
-    position: absolute;
-    top: 3%;
-    right: 0;
-    transform: rotateZ(40deg);
-    border: 1px dotted rgb(182, 182, 182);
-    font-size: 16px;
+    // padding: 12px 10px;
+    // border-radius: 200px;
+    // color: rgb(182, 182, 182);
+    // position: absolute;
+    // top: 3%;
+    // right: 0;
+    // transform: rotateZ(40deg);
+    // border: 1px dotted rgb(182, 182, 182);
+    // font-size: 16px;
     // @include font-dpr(11px);
+    color: rgb(182, 182, 182);
+    border: 1px dotted rgb(182, 182, 182);
+    box-sizing: border-box;
+    display: inline-block;
+    border-radius: 5px;
+    padding: 3px 5px;
+    line-height: 1;
+    font-size: 12px;
+    margin-left: 5px;
 }
 .sold-back{
-    padding: 12px 10px;
-    border-radius: 200px;
     color: orange;
-    position: absolute;
-    top: 3%;
-    right: 0;
-    transform: rotateZ(40deg);
     border: 1px dotted orange;
-    font-size: 16px;
     box-sizing: border-box;
-    // @include font-dpr(11px);
+    display: inline-block;
+    border-radius: 5px;
+    padding: 3px 5px;
+    line-height: 1;
+    font-size: 12px;
+    margin-left: 5px;
 }
 .sold-allawy{
-    padding: 12px 10px;
-    border-radius: 200px;
     color: #2cccd4;
-    position: absolute;
-    top: 3%;
-    right: 0;
-    transform: rotateZ(40deg);
     border: 1px dotted #2cccd4;
-    font-size: 16px;
+    box-sizing: border-box;
+    display: inline-block;
+    border-radius: 5px;
+    padding: 3px 5px;
+    line-height: 1;
+    font-size: 12px;
+    margin-left: 5px;
+
+    // padding: 12px 10px;
+    // border-radius: 200px;
+    // color: #2cccd4;
+    // position: absolute;
+    // top: 3%;
+    // right: 0;
+    // transform: rotateZ(40deg);
+    // border: 1px dotted #2cccd4;
+    // font-size: 16px;
     // @include font-dpr(11px);
 }
 .flex-p{

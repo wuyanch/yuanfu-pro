@@ -204,6 +204,7 @@
 // import {compress, compressAccurately, imageConversion} from 'image-conversion';
 import * as imageConversion from 'image-conversion';
 import { error } from 'util';
+import baseURL from '@/js/base.js';
 export default {
     name:'procedureFinish',
     data(){
@@ -555,7 +556,10 @@ export default {
         },
         // 取图片列表
         getListPhoto: function(){
-            this.$axios.get('/index/list/image',{
+            console.log('取图片列表环境URL')
+            console.log(process.env.NODE_ENV==='production'?baseURL.production:baseURL.test)
+            const imgBaseURL = process.env.NODE_ENV ==='production'?baseURL.production:baseURL.test;
+            this.$axios.get('/index/list/images',{
                     params:{
                         proserialno:localStorage.getItem('YF_quotationInformation_proserialno'),
                         rand:new Date().getTime()
@@ -571,6 +575,7 @@ export default {
                              res.data.data.forEach(function(current,index){
                             // that.$set(current,"status",'success');//改变状态位
                                 current.status = 'success';
+                                current.url = imgBaseURL+current.viewurl;
                             })
                             this.fileList = res.data.data;
                         }
