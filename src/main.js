@@ -48,8 +48,8 @@ Vue.prototype.$axios = axios;
 
 
 
-// axios.defaults.baseURL = process.env.NODE_ENV==='production'?'http://gdbbc.pension.taikang.com/mybp/work':'' //服务器地址--//埋点地址也记得改
-axios.defaults.baseURL = process.env.NODE_ENV==='production'?'http://106.53.125.63:9080/mybp':'' //服务器地址
+axios.defaults.baseURL = process.env.NODE_ENV==='production'?'http://gdbbc.pension.taikang.com/mybp/work':'' //服务器地址--//埋点地址也记得改
+// axios.defaults.baseURL = process.env.NODE_ENV==='production'?'http://106.53.125.63:9080/mybp':'' //服务器地址
 axios.defaults.crossDomain = true;
 // axios.defaults.timeout = 30000;//设计超时 30S为超时
 axios.defaults.withCredentials = true;  //设置cross跨域 并设置访问权限 允许跨域携带cookie信息
@@ -143,7 +143,7 @@ axios.interceptors.response.use(
 
 const user_id = window.localStorage.getItem("token") // 这个是必须要有唯一的id，可以取用户id
 sa.init({
-  server_url: process.env.NODE_ENV==='production'?'/mybp/user/logdata':'/user/logdata', // 替换成自己的地址/mybp/work/user/logdata
+  server_url: process.env.NODE_ENV==='production'?'/user/logdata':'/user/logdata', // 替换成自己的地址/mybp/work/user/logdata
   show_log: false, // 打印console，自己配置，可以看到自己是否踩点成功，以及//false
   max_string_length: 3000,
   heatmap: {
