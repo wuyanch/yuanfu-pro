@@ -454,9 +454,9 @@ export default {
                 premiumsum: this.premiumsum,
                 proserialno: this.proserialno,
                 subprojectid: this.subprojectid,
-                yfday:this.yfday,
-                yfmonth:this.yfmonth,
-                yfyear:this.yfyear
+                yfday:this.yfday == null? 0:this.yfday,
+                yfmonth:this.yfmonth == null? 0:this.yfmonth,
+                yfyear:this.yfyear == null? 0:this.yfyear
             }
             console.log(param)
             this.storageloading = true;
