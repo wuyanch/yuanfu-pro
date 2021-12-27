@@ -4,7 +4,7 @@
             <div class="develop-content">
                 <img :src="src" alt="">
                 <p>身份验证已失效，请返回首页或者关闭重新进入</p>
-                <div class="button-zy"><a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8016693d70c04bd3&redirect_uri=http%3A%2F%2Fwx1.taikang95522.com%2Fjxgj%2FMainTitle.action?function=YFProject&response_type=code&scope=snsapi_base&state=1#wechat_redirect">回到主页</a></div>
+                <div class="button-zy"><a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8016693d70c04bd3&redirect_uri=http%3A%2F%2Fgd.pension.taikang.com%2Fjxgj%2FMainTitle.action?function=YFProject&response_type=code&scope=snsapi_base&state=1#wechat_redirect">回到主页</a></div>
             </div>
         </div>
         

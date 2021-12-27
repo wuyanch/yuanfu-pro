@@ -76,7 +76,7 @@
                     </div>
                     <div class="detail-part-common" v-if="detailData.taxmark == 0">
                         <p class="part-content-title part-content-title-small" data-order="03"><span>发票</span></p>
-                        <p>发票类型：{{detailData.invoice == 0?'不需要发票':'需要专票'}}</p>
+                        <p>发票类型：{{detailData.invoice == 0?'不需要专票':'需要专票'}}</p>
                     </div>
                 </div>
             </div>

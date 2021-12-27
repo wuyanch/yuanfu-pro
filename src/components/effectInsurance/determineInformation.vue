@@ -56,7 +56,7 @@
                     </div>
                 </div>
                 <!-- 确认发票类型 -->
-                <div class="information-content-part " v-show="!ifOverTwo">
+                <div class="information-content-part " v-if="taxmark == 0">
                     <div class="information-content-plan-top">
                         <span>3、确认 发票类型 </span>
                     </div>
@@ -129,7 +129,7 @@ export default {
             // canshow:false,
             storageloading:false,//生成资料loading
             initLoading: true,
-            ifOverTwo:'0',//是否超过20W保费
+            taxmark:'1',//是否为一般纳税人
             dialogFormVisible:false,//是否展示切换
             waitProserialno:null,//需要切换的询价
             enterpriseCurName: localStorage.getItem('YF_mainstream_project'),//项目
@@ -216,11 +216,11 @@ export default {
                     that.createtime = resp[0].data.createtime;
                     that.loseefficacytime = resp[0].data.loseefficacytime;
                     that.tempAllPlan = resp[1].data;
-                    that.ifOverTwo = resp[2].data.totalPremium;
-                    if(resp[2].data.totalPremium == 0){
-                        that.invoice = '0'
-                    }else{
+                    that.taxmark = resp[2].data.taxmark;
+                    if(resp[2].data.taxmark == 0){
                         that.invoice = '1'
+                    }else{
+                        that.invoice = '0'
                     }
                     that.calculationPremium(that.tempAllPlan);
                     // that.canshow = true;
@@ -530,11 +530,14 @@ export default {
                     }
                 } 
             }else if(this.yfmonth != 0 && this.yfmonth != '' && this.yfmonth != null){//如果是月
+                let tempMonth = (month+2) > 12 ? (month+2)-12 : month+2;
+                let tempYear =  (month+2) > 12 ? Number(year)+1 : year;
                 let nowMonDM = this.mGetDate(year,month+1);//当月日子假如28天
-                let futMonDM = this.mGetDate(year,month+2);//下月末日子
+                let futMonDM = this.mGetDate(tempYear,tempMonth);//下月末日子
                 // 1个月的，如果是下个月有的，就直接加一个月，如果没有的话，就直接按照最后一天~
                 if(nowMonDM < futMonDM || nowMonDM == futMonDM){//下月末日子大于当前选择月份的末日子或者相等
-                    dateTime = new Date(new Date(year +"/"+(month+2) +"/"+day).getTime() );
+                    
+                    dateTime = new Date(new Date(tempYear +"/"+(tempMonth) +"/"+day).getTime() );
                 //    if(day == nowMonDM){//选择的日期等于末日- 24 * 60 * 60 * 1000 * 1
                 //         dateTime = new Date(new Date(year +"/"+(month+2) +"/"+futMonDM).getTime() );
                 //     }else{//选择的日期不是末日- 24 * 60 * 60 * 1000 * 1
@@ -543,10 +546,10 @@ export default {
                 }else{//当前2月份日子小于明天2月份日子 28 29
                     if(day > futMonDM){//选择的日期等于末日
                         // return year +"-"+((month+2)>9?(month+2):"0"+(month+2)) +"-"+(futMonD>9?futMonD:"0"+futMonD);- 24 * 60 * 60 * 1000 * 1
-                        dateTime = new Date(new Date(year +"/"+(month+2) +"/"+futMonDM).getTime() );
+                        dateTime = new Date(new Date(tempYear +"/"+(tempMonth) +"/"+futMonDM).getTime() );
                     }else{//选择的日期不是末日
                         // return year +"-"+((month+2)>9?(month+2):"0"+(month+2))+"-"+(day>9?day:"0"+day);- 24 * 60 * 60 * 1000 * 1
-                        dateTime = new Date(new Date(year +"/"+(month+2) +"/"+day).getTime() );
+                        dateTime = new Date(new Date(tempYear +"/"+(tempMonth) +"/"+day).getTime() );
                     }
                 } 
             }else if(this.yfday != 0 && this.yfday != '' && this.yfday != null){//如果是天-1

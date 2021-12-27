@@ -440,7 +440,7 @@ export default {
             unitIndustryType:[],
             unitForm: {
                 subproname: '',//子项目名称
-                companyCertificatesType: '01',//证件类型
+                companyCertificatesType: '02',//证件类型 默认法人营业执照
                 companyCrtificatesCode: null,//证件号码
                 companyAddress: {
                     province: '------- 省 --------',
