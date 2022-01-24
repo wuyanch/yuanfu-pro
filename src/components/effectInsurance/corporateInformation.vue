@@ -81,7 +81,7 @@
                                 label="②注册电话"
                                 :required="unitForm.taxmark == '0'? 'required': false"
                             >
-                                <el-input maxlength=12  v-model="unitForm.taxphone" placeholder="请输入注册电话"></el-input>
+                                <el-input maxlength=13  v-model="unitForm.taxphone" placeholder="请输入注册电话"></el-input>
                             </el-form-item>
 
                             <el-form-item
